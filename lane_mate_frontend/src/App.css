@@ -3,7 +3,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,4 +11,28 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.logo {
+  height: 200px;
+  width: 250px;
+}
+.header {
+  text-align: center;
+  padding: 15px 0;
+  background-color: #cedef4;
+  font-weight: bold;
+  color: #000000;
+  position: rela1tive;
+  font-size: 1.5em;
+  font-family: "Roboto", sans-serif;
+}
+.header img {
+  position: absolute;
+  left: 15px;
+  top: 35px;
+}
+
+.laneCardText {
+  font-size: 20px;
 }

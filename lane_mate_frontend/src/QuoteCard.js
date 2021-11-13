@@ -3,30 +3,44 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 
 export default function QuoteCard(props) {
-  console.log(props);
-  console.log(props.quote.Customer);
-  const customer = props.quote.Customer;
-  const date = props.quote.quoteDate;
+  const customer = props.quote.customerName;
+  const quoteDate = props.quote.quoteDate;
   const quoteNumber = props.quote.quoteNumber;
   const destination = props.quote.destination;
   const origin = props.quote.origin;
-  const equipment = props.quote.equipment;
+  const equipment = props.quote.equipmentType;
   const weight = props.quote.weight;
   const numberOfPallets = props.quote.numberOfPallets;
   const dimensions = props.quote.dimensions;
 
   return (
     <Card>
-      <CardHeader title={"Quote Request # " + quoteNumber} />
+      <CardHeader title={"Quote Request " + quoteNumber} />
       <CardContent>
-        {"Customer: " + customer + " "}
-        {"Date: " + date + " "}
-        {"Destination: " + destination + " "}
-        {"Origin: " + origin + " "}
-        {"Equipment: " + equipment + " "}
-        {"Weight: " + weight + "lbs" + " "}
-        {"Number of Pallets: " + numberOfPallets + " "}
-        {"Dimensions: " + dimensions + " "}
+        <span className="laneCardText" title="Customer">
+          {"// " + customer + " //"}
+        </span>
+        <span className="laneCardText" title="Date of Quote">
+          {" " + quoteDate + " // "}
+        </span>
+        <span className="laneCardText" title="Origin">
+          {" " + origin + " to "}
+        </span>
+        <span className="laneCardText" title="Destination">
+          {" " + destination + " // "}
+        </span>
+        <span className="laneCardText" title="Equipment Type">
+          {" " + equipment + " // "}
+        </span>
+        <span className="laneCardText" title="Weight in Pounds">
+          {" " + weight + " lbs // "}
+        </span>
+        <span className="laneCardText" title="Number of Pallets">
+          {" " + numberOfPallets + " pallets // "}
+        </span>
+        <span className="laneCardText" title="Dimensions">
+          {" " + dimensions + " // "}
+        </span>
       </CardContent>
     </Card>
   );
