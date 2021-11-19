@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 function createData(
   carrierName,
@@ -25,6 +26,8 @@ function createData(
 const rows = [];
 
 export default function CarrierTable() {
+  const { register, handleSubmit, errors, control } = useForm();
+
   const [carrierName, setCarrierName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [dispatchEmail, setDispatchEmail] = useState("");
@@ -32,7 +35,7 @@ export default function CarrierTable() {
   const [rate, setRate] = useState("");
   const [notes, setNotes] = useState("");
 
-  const handleSubmit = () => {
+  const createNewEntryOnSubmit = () => {
     const newEntry = createData(
       carrierName,
       phoneNumber,
@@ -41,6 +44,7 @@ export default function CarrierTable() {
       rate,
       notes
     );
+    console.log(newEntry);
     rows.push(newEntry);
     setCarrierName("");
     setPhoneNumber("");
@@ -54,24 +58,30 @@ export default function CarrierTable() {
     <div>
       <Box
         component="form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSubmit(e);
-        }}
+        onSubmit={handleSubmit(createNewEntryOnSubmit)}
         sx={{
           "& > :not(style)": { m: 1 },
         }}
         noValidate
         autoComplete="off"
       >
-        <TextField
+        <Controller
+          name="carrierName"
+          control={control}
+          onChange={(event) => setCarrierName(event.target.value)}
           value={carrierName}
-          onChange={(e) => setCarrierName(e.target.value)}
-          label="Carrier Name"
-          variant="outlined"
-          margin="normal"
-          color="secondary"
-          required
+          rules={{ required: true, minLength: 2, maxLength: 5 }}
+          render={({ field: { onChange, value } }) => (
+            <TextField
+              value={value}
+              onChange={onChange}
+              label="Carrier Name"
+              variant="outlined"
+              margin="normal"
+              color="secondary"
+              required
+            />
+          )}
         />
         <TextField
           value={phoneNumber}
