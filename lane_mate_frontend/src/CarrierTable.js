@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 function createData(
@@ -26,32 +26,15 @@ function createData(
 const rows = [];
 
 export default function CarrierTable() {
-  const { register, handleSubmit, errors, control } = useForm();
+  const { handleSubmit, errors, control } = useForm();
 
-  const [carrierName, setCarrierName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [dispatchEmail, setDispatchEmail] = useState("");
-  const [contactName, setContactName] = useState("");
-  const [rate, setRate] = useState("");
-  const [notes, setNotes] = useState("");
+  // Temp. Remove this when you handle the errors :) 
+  useEffect(() => {
+    if (errors) console.error(errors);
+  }, [errors])
 
-  const createNewEntryOnSubmit = () => {
-    const newEntry = createData(
-      carrierName,
-      phoneNumber,
-      dispatchEmail,
-      contactName,
-      rate,
-      notes
-    );
-    console.log(newEntry);
-    rows.push(newEntry);
-    setCarrierName("");
-    setPhoneNumber("");
-    setDispatchEmail("");
-    setContactName("");
-    setRate("");
-    setNotes("");
+  const createNewEntryOnSubmit = (e) => {
+    console.log(e);
   };
 
   return (
@@ -68,8 +51,7 @@ export default function CarrierTable() {
         <Controller
           name="carrierName"
           control={control}
-          onChange={(event) => setCarrierName(event.target.value)}
-          value={carrierName}
+          defaultValue=""
           rules={{ required: true, minLength: 2, maxLength: 5 }}
           render={({ field: { onChange, value } }) => (
             <TextField
@@ -84,8 +66,6 @@ export default function CarrierTable() {
           )}
         />
         <TextField
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
           label="Phone Number"
           variant="outlined"
           margin="normal"
@@ -93,8 +73,6 @@ export default function CarrierTable() {
           required
         />
         <TextField
-          value={dispatchEmail}
-          onChange={(e) => setDispatchEmail(e.target.value)}
           label="Dispatch Email"
           variant="outlined"
           margin="normal"
@@ -102,16 +80,12 @@ export default function CarrierTable() {
           required
         />
         <TextField
-          value={contactName}
-          onChange={(e) => setContactName(e.target.value)}
           label="Contact Name"
           variant="outlined"
           margin="normal"
           color="secondary"
         />
         <TextField
-          value={rate}
-          onChange={(e) => setRate(e.target.value)}
           label="Rate"
           variant="outlined"
           margin="normal"
@@ -119,8 +93,6 @@ export default function CarrierTable() {
           required
         />
         <TextField
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
           label="Notes"
           variant="outlined"
           margin="normal"
