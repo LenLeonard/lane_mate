@@ -2,23 +2,24 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 
-export default function QuoteCard(props) {
-  const customer = props.quote.customerName;
-  const quoteDate = props.quote.quoteDate;
-  const quoteNumber = props.quote.quoteNumber;
-  const destination = props.quote.destination;
-  const origin = props.quote.origin;
-  const equipment = props.quote.equipmentType;
-  const weight = props.quote.weight;
-  const numberOfPallets = props.quote.numberOfPallets;
-  const dimensions = props.quote.dimensions;
-
+export default function QuoteCard({
+  dimensions,
+  numberOfFeet,
+  numberOfPallets,
+  origin,
+  destination,
+  quoteNumber,
+  quoteDate,
+  customerName,
+  equipmentType,
+  weight,
+}) {
   return (
     <Card>
       <CardHeader title={"Quote Request " + quoteNumber} />
       <CardContent>
         <span className="laneCardText" title="Customer">
-          {"// " + customer + " //"}
+          {"// " + customerName + " //"}
         </span>
         <span className="laneCardText" title="Date of Quote">
           {" " + quoteDate + " // "}
@@ -30,7 +31,7 @@ export default function QuoteCard(props) {
           {" " + destination + " // "}
         </span>
         <span className="laneCardText" title="Equipment Type">
-          {" " + equipment + " // "}
+          {" " + equipmentType + " // "}
         </span>
         <span className="laneCardText" title="Weight in Pounds">
           {" " + weight + " lbs // "}
@@ -40,6 +41,9 @@ export default function QuoteCard(props) {
         </span>
         <span className="laneCardText" title="Dimensions">
           {" " + dimensions + " // "}
+        </span>
+        <span className="laneCardText" title="Number of Feet">
+          {" " + numberOfFeet + " feet"}
         </span>
       </CardContent>
     </Card>

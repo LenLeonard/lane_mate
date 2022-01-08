@@ -9,8 +9,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import QuoteCard from "./QuoteCard";
 import { CardActions } from "@mui/material";
+import { useForm } from "react-hook-form";
 
 export default function FormDialog() {
+  const { register, errors } = useForm();
+
   const [quoteNumber, setQuoteNumber] = useState(1);
   const [customerName, setCustomerName] = useState("");
   const [origin, setOrigin] = useState("");
@@ -19,6 +22,7 @@ export default function FormDialog() {
   const [weight, setWeight] = useState("");
   const [numberOfPallets, setNumberOfPallets] = useState("");
   const [dimensions, setDimensions] = useState("");
+  const [numberOfFeet, setNumberOfFeet] = useState("");
   const quoteDate = new Date().toDateString();
 
   const [quoteObject, setQuoteObject] = useState({
@@ -31,6 +35,7 @@ export default function FormDialog() {
     weight: "Weight in",
     numberOfPallets: "Number of ",
     dimensions: "Dimensions",
+    numberOfFeet: "Number of ",
   });
 
   function createQuoteObject(
@@ -42,7 +47,8 @@ export default function FormDialog() {
     equipmentType,
     weight,
     numberOfPallets,
-    dimensions
+    dimensions,
+    numberOfFeet
   ) {
     return {
       quoteNumber: "# " + quoteNumber,
@@ -54,6 +60,7 @@ export default function FormDialog() {
       weight: weight,
       numberOfPallets: numberOfPallets,
       dimensions: dimensions,
+      numberOfFeet: numberOfFeet,
     };
   }
 
@@ -79,7 +86,8 @@ export default function FormDialog() {
       equipmentType,
       weight,
       numberOfPallets,
-      dimensions
+      dimensions,
+      numberOfFeet
     );
 
     setQuoteObject(newQuoteObject);
@@ -174,6 +182,16 @@ export default function FormDialog() {
               type="outline"
               variant="standard"
             />
+            <TextField
+              value={numberOfFeet}
+              onChange={(e) => setNumberOfFeet(e.target.value)}
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Number of Feet"
+              type="outline"
+              variant="standard"
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
@@ -181,7 +199,7 @@ export default function FormDialog() {
           </DialogActions>
         </Dialog>
       </div>
-      <QuoteCard quote={quoteObject} />
+      <QuoteCard {...quoteObject} />
     </div>
   );
 }
