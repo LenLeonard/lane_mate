@@ -9,21 +9,19 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import QuoteCard from "./QuoteCard";
 import { CardActions } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import CarrierTable from "./CarrierTable";
 
 export default function FormDialog() {
-  const { register, errors } = useForm();
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   const [quoteNumber, setQuoteNumber] = useState(1);
-  const [customerName, setCustomerName] = useState("");
-  const [origin, setOrigin] = useState("");
-  const [destination, setDestination] = useState("");
-  const [equipmentType, setEquipmentType] = useState("");
-  const [weight, setWeight] = useState("");
-  const [numberOfPallets, setNumberOfPallets] = useState("");
-  const [dimensions, setDimensions] = useState("");
-  const [numberOfFeet, setNumberOfFeet] = useState("");
-  const quoteDate = new Date().toDateString();
 
   const [quoteObject, setQuoteObject] = useState({
     quoteNumber: "",
@@ -38,33 +36,7 @@ export default function FormDialog() {
     numberOfFeet: "Number of ",
   });
 
-  function createQuoteObject(
-    quoteNumber,
-    quoteDate,
-    customerName,
-    origin,
-    destination,
-    equipmentType,
-    weight,
-    numberOfPallets,
-    dimensions,
-    numberOfFeet
-  ) {
-    return {
-      quoteNumber: "# " + quoteNumber,
-      quoteDate: new Date().toDateString(),
-      customerName: customerName,
-      origin: origin,
-      destination: destination,
-      equipmentType: equipmentType,
-      weight: weight,
-      numberOfPallets: numberOfPallets,
-      dimensions: dimensions,
-      numberOfFeet: numberOfFeet,
-    };
-  }
-
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,24 +46,24 @@ export default function FormDialog() {
     setOpen(false);
   };
 
-  const handleSubmit = () => {
+  const onSubmit = (event) => {
     setQuoteNumber(quoteNumber + 1);
 
-    const newQuoteObject = createQuoteObject(
-      quoteNumber,
-      quoteDate,
-      customerName,
-      origin,
-      destination,
-      equipmentType,
-      weight,
-      numberOfPallets,
-      dimensions,
-      numberOfFeet
-    );
+    let newQuoteObject = {
+      quoteNumber: quoteNumber,
+      quoteDate: new Date().toDateString(),
+      customerName: event.customerName,
+      origin: event.origin,
+      destination: event.destination,
+      equipmentType: event.equipmentType,
+      weight: event.weight,
+      numberOfPallets: event.numberOfPallets,
+      dimensions: event.dimensions,
+      numberOfFeet: event.numberOfFeet,
+    };
 
     setQuoteObject(newQuoteObject);
-
+    reset();
     handleClose();
   };
 
@@ -107,99 +79,175 @@ export default function FormDialog() {
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Enter Quote Information</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Please enter Customer name, date, destination, orgin, equipment
-              type, weight, number of pallets and dimensions.
-            </DialogContentText>
-            <TextField
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Customer"
-              type="outline"
-              variant="standard"
-            />
+            <form id="dialogForm" onSubmit={handleSubmit(onSubmit)}>
+              <DialogContentText>
+                Please enter Customer name, date, destination, orgin, equipment
+                type, weight, number of pallets and dimensions.
+              </DialogContentText>
+              <Controller
+                name="customerName"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value || ""}
+                    onChange={onChange}
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Customer"
+                    type="outline"
+                    variant="standard"
+                  />
+                )}
+              />
+              <Controller
+                name="origin"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value || ""}
+                    onChange={onChange}
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Origin"
+                    type="outline"
+                    variant="standard"
+                  />
+                )}
+              />
+              <Controller
+                name="destination"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value || ""}
+                    onChange={onChange}
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Destination"
+                    type="outline"
+                    variant="standard"
+                  />
+                )}
+              />
+              <Controller
+                name="equipmentType"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value || ""}
+                    onChange={onChange}
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Equipment Type"
+                    type="outline"
+                    variant="standard"
+                  />
+                )}
+              />
+              <Controller
+                name="weight"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value || ""}
+                    onChange={onChange}
+                    autoFocus
+                    margin="dense"
+                    label="Weight"
+                    type="outline"
+                    variant="standard"
+                    {...register("weight", {
+                      pattern: {
+                        value: /^\d+(\.\d{1,2})?$/,
+                        message: "Weight must be a number",
+                      },
+                    })}
+                    error={!!errors?.weight}
+                    helperText={errors?.weight?.message}
+                  />
+                )}
+              />
+              <Controller
+                name="numberOfPallets"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value || ""}
+                    onChange={onChange}
+                    autoFocus
+                    margin="dense"
+                    label="Number of Pallets"
+                    type="outline"
+                    variant="standard"
+                    {...register("numberOfPallets", {
+                      pattern: {
+                        value: /^\d+(\.\d{1,2})?$/,
+                        message: "Number of Pallets must be a number",
+                      },
+                    })}
+                    error={!!errors?.numberOfPallets}
+                    helperText={errors?.numberOfPallets?.message}
+                  />
+                )}
+              />
 
-            <TextField
-              value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Origin"
-              type="outline"
-              variant="standard"
-            />
-            <TextField
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Destination"
-              type="outline"
-              variant="standard"
-            />
-            <TextField
-              value={equipmentType}
-              onChange={(e) => setEquipmentType(e.target.value)}
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Equipment Type"
-              type="outline"
-              variant="standard"
-            />
-            <TextField
-              value={numberOfPallets}
-              onChange={(e) => setNumberOfPallets(e.target.value)}
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Number of Pallets"
-              type="outline"
-              variant="standard"
-            />
-            <TextField
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Weight"
-              type="outline"
-              variant="standard"
-            />
-            <TextField
-              value={dimensions}
-              onChange={(e) => setDimensions(e.target.value)}
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Dimensions"
-              type="outline"
-              variant="standard"
-            />
-            <TextField
-              value={numberOfFeet}
-              onChange={(e) => setNumberOfFeet(e.target.value)}
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Number of Feet"
-              type="outline"
-              variant="standard"
-            />
+              <Controller
+                name="numberOfFeet"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value || ""}
+                    onChange={onChange}
+                    autoFocus
+                    margin="dense"
+                    label="Number of Feet"
+                    type="outline"
+                    variant="standard"
+                    {...register("numberOfFeet", {
+                      pattern: {
+                        value: /^\d+(\.\d{1,2})?$/,
+                        message: "Number of Feet must be a number",
+                      },
+                    })}
+                    error={!!errors?.numberOfFeet}
+                    helperText={errors?.numberOfFeet?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                name="dimensions"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value || ""}
+                    onChange={onChange}
+                    autoFocus
+                    margin="dense"
+                    label="Dimensions"
+                    type="outline"
+                    variant="standard"
+                  />
+                )}
+              />
+            </form>
           </DialogContent>
+
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button type="submit" form="dialogForm">
+              Submit
+            </Button>
           </DialogActions>
         </Dialog>
       </div>
       <QuoteCard {...quoteObject} />
+      <br />
+      <CarrierTable />
     </div>
   );
 }

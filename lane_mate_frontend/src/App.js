@@ -11,8 +11,6 @@ function App() {
       <TopBar />
       <Header />
       <FormDialog />
-      <br />
-      <CarrierTable />
     </div>
   );
 }

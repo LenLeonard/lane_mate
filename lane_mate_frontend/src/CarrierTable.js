@@ -6,58 +6,25 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import { TextField } from "@mui/material";
-import Button from "@mui/material/Button";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+
+import { useForm } from "react-hook-form";
+import CarrierForm from "./CarrierForm";
 
 // This function takes in the data from the form and creates an object corresponding to the carrier and rate information entered
-
-function createData(
-  carrierName,
-  phoneNumber,
-  dispatchEmail,
-  contactName,
-  rate,
-  notes
-) {
-  return { carrierName, phoneNumber, dispatchEmail, contactName, rate, notes };
-}
 
 //rows is an array of objects that correspond to the data in the table
 const rows = [];
 
 // This is the component that renders the table
 export default function CarrierTable() {
-  const { register, handleSubmit, errors, control } = useForm();
-
-  const [carrierName, setCarrierName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [dispatchEmail, setDispatchEmail] = useState("");
-  const [contactName, setContactName] = useState("");
-  const [rate, setRate] = useState("");
-  const [notes, setNotes] = useState("");
+  const { reset } = useForm();
 
   // This function is called when the user submits the form. newEntry is an object created from the state of each of the form fields
 
-  const createNewEntryOnSubmit = () => {
-    const newEntry = createData(
-      carrierName,
-      phoneNumber,
-      dispatchEmail,
-      contactName,
-      rate,
-      notes
-    );
-    console.log(newEntry);
-    rows.push(newEntry);
-    setCarrierName("");
-    setPhoneNumber("");
-    setDispatchEmail("");
-    setContactName("");
-    setRate("");
-    setNotes("");
+  const createNewEntryOnSubmit = (event) => {
+    console.log(event);
+    rows.push(event);
+    reset();
   };
 
   return (
@@ -96,87 +63,7 @@ export default function CarrierTable() {
         </TableContainer>
       </div>
       <div>
-        <form onSubmit={handleSubmit(createNewEntryOnSubmit)}>
-          <Box
-            sx={{
-              "& > :not(style)": { m: 1 },
-            }}
-            noValidate
-            autoComplete="on"
-          >
-            <Controller
-              name="carrierName"
-              control={control}
-              defaultValue=""
-              onChange={(e) => setCarrierName(e.target.value)}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  value={value}
-                  onChange={onChange}
-                  label="Carrier Name"
-                  variant="outlined"
-                  margin="normal"
-                  color="secondary"
-                  required
-                />
-              )}
-            />
-
-            <TextField
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              label="Phone Number"
-              variant="outlined"
-              margin="normal"
-              color="secondary"
-              required
-            />
-            <TextField
-              value={dispatchEmail}
-              onChange={(e) => setDispatchEmail(e.target.value)}
-              label="Dispatch Email"
-              variant="outlined"
-              margin="normal"
-              color="secondary"
-              required
-            />
-            <TextField
-              value={contactName}
-              onChange={(e) => setContactName(e.target.value)}
-              label="Contact Name"
-              variant="outlined"
-              margin="normal"
-              color="secondary"
-            />
-            <TextField
-              value={rate}
-              onChange={(e) => setRate(e.target.value)}
-              label="Rate"
-              variant="outlined"
-              margin="normal"
-              color="secondary"
-              required
-            />
-            <TextField
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              label="Notes"
-              variant="outlined"
-              margin="normal"
-              color="secondary"
-              multilinerows="4"
-            />
-
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              size="large"
-            >
-              Add Carrier
-            </Button>
-          </Box>
-        </form>
+        <CarrierForm createNewEntryOnSubmit={createNewEntryOnSubmit} />
       </div>
     </div>
   );
