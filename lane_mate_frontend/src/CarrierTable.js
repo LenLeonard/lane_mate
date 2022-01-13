@@ -12,7 +12,8 @@ import CarrierForm from "./CarrierForm";
 // This is the component that renders the table
 export default function CarrierTable({
   tableData,
-  returnCarrierDataToDashboard,
+
+  setTableData,
 }) {
   //rows is an array of objects, each a submit event returned from CarrierForm that will be displayed in the table
   //when CarrierTable is rendered, the empty tableData array is passed in as a prop from the Dashboard component,
@@ -23,7 +24,7 @@ export default function CarrierTable({
   //which is rendered in the Dashboard component. It takes the event from the form and pushes it to the tableData array,
   //which is then rendered dynamically in the table and then returned to the Dashboard component, where it is stored for search
   const createNewEntryOnSubmit = (event) => {
-    returnCarrierDataToDashboard(event);
+    setTableData([event, ...tableData]);
     console.log(rows);
   };
 

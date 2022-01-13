@@ -133,12 +133,6 @@ export default function Dashboard() {
     return quoteRequest;
   }
 
-  // this is the callback function that retrieves the data from the table and stores it in the tableData state
-  function returnCarrierDataToDashboard(event) {
-    setTableData((state) => [...state, event]);
-    console.log(tableData);
-  }
-
   //this is the callback function that the search bar component will call when a search qurery is submitted, so that the dashboard can be updated
   function updateDashBoard(dashBoardObject) {
     setQuoteObject(dashBoardObject.quoteObject);
@@ -330,10 +324,7 @@ export default function Dashboard() {
       />
       <QuoteCard {...quoteObject} />
       <br />
-      <CarrierTable
-        tableData={tableData}
-        returnCarrierDataToDashboard={returnCarrierDataToDashboard}
-      />
+      <CarrierTable tableData={tableData} setTableData={setTableData} />
     </div>
   );
 }
