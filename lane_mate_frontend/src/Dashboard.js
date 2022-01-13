@@ -26,7 +26,7 @@ export default function Dashboard() {
 
   //tableData is being used right now to pass an empty array to the table when New Quote Request form is submitted
   //it will also be used to update the table when a quote request is selected from the search bar
-  const [tableData, setTableData] = useState([]);
+  let [tableData, setTableData] = useState([]);
 
   //quote number is being used to increment pass the quote number to the QuoteCard component
   const [quoteNumber, setQuoteNumber] = useState(1);
@@ -136,6 +136,7 @@ export default function Dashboard() {
   // this is the callback function that retrieves the data from the table and stores it in the tableData state
   function returnCarrierDataToDashboard(event) {
     setTableData((state) => [...state, event]);
+    console.log(tableData);
   }
 
   //this is the callback function that the search bar component will call when a search qurery is submitted, so that the dashboard can be updated

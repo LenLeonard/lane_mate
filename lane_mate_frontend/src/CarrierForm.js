@@ -10,11 +10,13 @@ export default function CarrierForm({ createNewEntryOnSubmit }) {
     handleSubmit,
     control,
     reset,
+    setFocus,
     formState: { errors },
   } = useForm();
 
   const formSubmitandReset = (event) => {
     createNewEntryOnSubmit(event);
+    setFocus("carrierName");
     reset();
   };
 
@@ -29,6 +31,7 @@ export default function CarrierForm({ createNewEntryOnSubmit }) {
       >
         <Controller
           name="carrierName"
+          id="carrierName"
           control={control}
           render={({ field: { onChange, value } }) => (
             <TextField
@@ -39,6 +42,8 @@ export default function CarrierForm({ createNewEntryOnSubmit }) {
               margin="normal"
               color="secondary"
               required
+              autoFocus
+              {...register("carrierName")}
             />
           )}
         />

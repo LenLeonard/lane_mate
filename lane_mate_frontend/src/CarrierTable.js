@@ -24,6 +24,7 @@ export default function CarrierTable({
   //which is then rendered dynamically in the table and then returned to the Dashboard component, where it is stored for search
   const createNewEntryOnSubmit = (event) => {
     returnCarrierDataToDashboard(event);
+    console.log(rows);
   };
 
   return (
