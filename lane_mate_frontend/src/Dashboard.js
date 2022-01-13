@@ -11,8 +11,9 @@ import QuoteCard from "./QuoteCard";
 import { CardActions } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import CarrierTable from "./CarrierTable";
+import SearchBar from "./SearchBar";
 
-export default function FormDialog() {
+export default function Dashboard() {
   const {
     register,
     handleSubmit,
@@ -21,8 +22,17 @@ export default function FormDialog() {
     formState: { errors },
   } = useForm();
 
+  let formattedQuoteRequest;
+
+  //tableData is being used right now to pass an empty array to the table when New Quote Request form is submitted
+  //it will also be used to update the table when a quote request is selected from the search bar
+  const [tableData, setTableData] = useState([]);
+
+  //quote number is being used to increment pass the quote number to the QuoteCard component
   const [quoteNumber, setQuoteNumber] = useState(1);
 
+  //quoteObject is being used to handle the data from the Quote Request Dialog pop up and pass it to the QuoteCard component
+  //the initial state is an empty quoteObject
   const [quoteObject, setQuoteObject] = useState({
     quoteNumber: "",
     quoteDate: new Date().toDateString(),
@@ -36,7 +46,27 @@ export default function FormDialog() {
     numberOfFeet: "Number of ",
   });
 
+  //this is an array of formatted quoteRequest objects that will be passed to the search bar component so they may be displayed in the search bar
+  let [formattedQuoteRequestArray, setFormattedQuoteRequestArray] = useState(
+    []
+  );
+
+  //createDashboardObject is being used to combine the tableData and quoteObjectArray to make a dashboard object
+  function createDashBoardObject(quoteObject, tableDataArray) {
+    let dashBoardObject = {
+      quoteObject: quoteObject,
+      tableDataArray: tableDataArray,
+    };
+    return dashBoardObject;
+  }
+
+  //dashboardObjectArray is an array of the objects that store the state of the entire dashboard, so that they may be recalled on search
+  const [dashBoardObjectArray, setDashBoardObjectArray] = useState([]);
+
+  //this is the function that opens the quote request dialog
   const [open, setOpen] = useState(false);
+
+  //and these are the click handlers that handle both opening and closing the quote request dialog
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -46,9 +76,13 @@ export default function FormDialog() {
     setOpen(false);
   };
 
+  //this is the function that handles the submit of the quote request form
+  //it might be trying to do too much
   const onSubmit = (event) => {
+    //this increments the quoteNumber state so that the next quote request will have a unique quote number
     setQuoteNumber(quoteNumber + 1);
 
+    //this takes the user input from the dialog form and defines the object that will be passed to the QuoteCard component
     let newQuoteObject = {
       quoteNumber: quoteNumber,
       quoteDate: new Date().toDateString(),
@@ -62,10 +96,53 @@ export default function FormDialog() {
       numberOfFeet: event.numberOfFeet,
     };
 
+    //this sets the quoteObject state to the newQuoteObject and so re-renders the quote card component with the updated quoteObject
     setQuoteObject(newQuoteObject);
+
+    //all of this logic was implemented to try and get search to work
+
+    //creates a new dashboard object with the quoteObject and tableDataArray
+
+    let newDashboardObject = createDashBoardObject(newQuoteObject, tableData);
+
+    //this pushes the new dashboard object to the dashboardObjectArray
+    setDashBoardObjectArray((state) => [...state, newDashboardObject]);
+    console.log(dashBoardObjectArray);
+
+    //this creates a fornatted quote request object that will be compatible with the search bar
+    formattedQuoteRequest = formatQuoteRequest(newQuoteObject);
+
+    //this is an array of formatted quoteRequest objects that will be passed to the search bar component so they may be displayed in the search bar
+    setFormattedQuoteRequestArray((state) => [...state, formattedQuoteRequest]);
+
+    //these functions reset the dialog form, pass an empty array to the table, and close the dialog
+
     reset();
+    setTableData([]);
+
     handleClose();
   };
+
+  //this is the function that formats the quote request object so that it can be passed to the search bar component
+  function formatQuoteRequest(quoteObject) {
+    let quoteRequest = {
+      quotenumber: quoteObject.quoteNumber,
+      display: `Quote Request ${quoteObject.quoteNumber}, ${quoteObject.numberOfPallets} Skids from ${quoteObject.origin} to ${quoteObject.destination} for ${quoteObject.customerName}`,
+    };
+
+    return quoteRequest;
+  }
+
+  // this is the callback function that retrieves the data from the table and stores it in the tableData state
+  function returnCarrierDataToDashboard(event) {
+    setTableData((state) => [...state, event]);
+  }
+
+  //this is the callback function that the search bar component will call when a search qurery is submitted, so that the dashboard can be updated
+  function updateDashBoard(dashBoardObject) {
+    setQuoteObject(dashBoardObject.quoteObject);
+    setTableData(dashBoardObject.tableDataArray);
+  }
 
   return (
     <div>
@@ -245,9 +322,17 @@ export default function FormDialog() {
           </DialogActions>
         </Dialog>
       </div>
+      <SearchBar
+        updateDashboard={updateDashBoard}
+        dashBoardObjectArray={dashBoardObjectArray}
+        quoteRequestArray={formattedQuoteRequestArray}
+      />
       <QuoteCard {...quoteObject} />
       <br />
-      <CarrierTable />
+      <CarrierTable
+        tableData={tableData}
+        returnCarrierDataToDashboard={returnCarrierDataToDashboard}
+      />
     </div>
   );
 }

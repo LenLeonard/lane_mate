@@ -7,24 +7,23 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-import { useForm } from "react-hook-form";
 import CarrierForm from "./CarrierForm";
 
-// This function takes in the data from the form and creates an object corresponding to the carrier and rate information entered
-
-//rows is an array of objects that correspond to the data in the table
-const rows = [];
-
 // This is the component that renders the table
-export default function CarrierTable() {
-  const { reset } = useForm();
+export default function CarrierTable({
+  tableData,
+  returnCarrierDataToDashboard,
+}) {
+  //rows is an array of objects, each a submit event returned from CarrierForm that will be displayed in the table
+  //when CarrierTable is rendered, the empty tableData array is passed in as a prop from the Dashboard component,
+  //which is how we are clearing the table when the user submits a new quote request
+  let rows = tableData;
 
-  // This function is called when the user submits the form. newEntry is an object created from the state of each of the form fields
-
+  //This function is passed as a callback to CarrierForm and called when the user clicks the "Add Carrier" button,
+  //which is rendered in the Dashboard component. It takes the event from the form and pushes it to the tableData array,
+  //which is then rendered dynamically in the table and then returned to the Dashboard component, where it is stored for search
   const createNewEntryOnSubmit = (event) => {
-    console.log(event);
-    rows.push(event);
-    reset();
+    returnCarrierDataToDashboard(event);
   };
 
   return (
