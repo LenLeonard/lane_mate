@@ -24,8 +24,7 @@ export default function CarrierTable({
   //which is rendered in the Dashboard component. It takes the event from the form and pushes it to the tableData array,
   //which is then rendered dynamically in the table and then returned to the Dashboard component, where it is stored for search
   const createNewEntryOnSubmit = (event) => {
-    setTableData([event, ...tableData]);
-    console.log(rows);
+    setTableData([...tableData, event]);
   };
 
   return (

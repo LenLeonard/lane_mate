@@ -52,10 +52,10 @@ export default function Dashboard() {
   );
 
   //createDashboardObject is being used to combine the tableData and quoteObjectArray to make a dashboard object
-  function createDashBoardObject(quoteObject, tableDataArray) {
+  function createDashBoardObject(quoteObject, tableData) {
     let dashBoardObject = {
       quoteObject: quoteObject,
-      tableDataArray: tableDataArray,
+      tableDataArray: tableData,
     };
     return dashBoardObject;
   }
@@ -79,6 +79,14 @@ export default function Dashboard() {
   //this is the function that handles the submit of the quote request form
   //it might be trying to do too much
   const onSubmit = (event) => {
+    //all of this logic was implemented to try and get search to work
+
+    //creates a new dashboard object with the quoteObject and tableDataArray
+
+    if (quoteObject.quoteNumber !== "") {
+      handleSaveQuoteRequest();
+    }
+
     //this increments the quoteNumber state so that the next quote request will have a unique quote number
     setQuoteNumber(quoteNumber + 1);
 
@@ -98,16 +106,6 @@ export default function Dashboard() {
 
     //this sets the quoteObject state to the newQuoteObject and so re-renders the quote card component with the updated quoteObject
     setQuoteObject(newQuoteObject);
-
-    //all of this logic was implemented to try and get search to work
-
-    //creates a new dashboard object with the quoteObject and tableDataArray
-
-    let newDashboardObject = createDashBoardObject(newQuoteObject, tableData);
-
-    //this pushes the new dashboard object to the dashboardObjectArray
-    setDashBoardObjectArray((state) => [...state, newDashboardObject]);
-    console.log(dashBoardObjectArray);
 
     //this creates a fornatted quote request object that will be compatible with the search bar
     formattedQuoteRequest = formatQuoteRequest(newQuoteObject);
@@ -139,11 +137,36 @@ export default function Dashboard() {
     setTableData(dashBoardObject.tableDataArray);
   }
 
+  function handleSaveQuoteRequest() {
+    if (dashBoardObjectArray.length === 0 && quoteObject.quoteNumber === "") {
+      alert("Please enter a quote request");
+    } else if (dashBoardObjectArray.length === 0) {
+      let newDashboardObject = createDashBoardObject(quoteObject, tableData);
+      setDashBoardObjectArray([...dashBoardObjectArray, newDashboardObject]);
+    } else {
+      let newDashboardObject = createDashBoardObject(quoteObject, tableData);
+      let lastElementIndex = dashBoardObjectArray.length - 1;
+
+      if (
+        dashBoardObjectArray[lastElementIndex].quoteObject.quoteNumber ===
+        newDashboardObject.quoteObject.quoteNumber
+      ) {
+        //this pushes the new dashboard object to the dashboardObjectArray
+        console.log("dashboard object already exists");
+      } else {
+        setDashBoardObjectArray([...dashBoardObjectArray, newDashboardObject]);
+      }
+    }
+  }
+
   return (
     <div>
       <CardActions sx={{ justifyContent: "flex-end" }}>
         <Button variant="outlined" onClick={handleClickOpen}>
-          New Quote Request
+          Create New Quote Request
+        </Button>
+        <Button variant="outlined" onClick={handleSaveQuoteRequest}>
+          Save Quote Request
         </Button>
       </CardActions>
 
@@ -324,6 +347,7 @@ export default function Dashboard() {
       />
       <QuoteCard {...quoteObject} />
       <br />
+
       <CarrierTable tableData={tableData} setTableData={setTableData} />
     </div>
   );

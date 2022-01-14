@@ -39,7 +39,7 @@ export default function SearchBar({
 //it calls the updateDashboard callback function with that dashBoardObject as an argument, which is used to update the Dashboard component
 
 function populateDashboard(value, dashBoardObjectArray, updateDashboard) {
-  let quoteRequestNumber = value.charAt(15);
+  let quoteRequestNumber = value.charAt(14);
 
   dashBoardObjectArray.forEach((dashBoardObject) => {
     if (
