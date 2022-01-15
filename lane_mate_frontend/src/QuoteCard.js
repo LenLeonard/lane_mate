@@ -2,6 +2,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 
+//QuoteCard takes in a quoteRequest object and displays the current quoteRequest information in a card
 export default function QuoteCard({
   dimensions,
   numberOfFeet,

@@ -9,7 +9,12 @@ import Paper from "@mui/material/Paper";
 
 import CarrierForm from "./CarrierForm";
 
-// This is the component that renders the table
+// CarrierTable is the component that renders the table. It takes three props:
+// 1. tableData: an array of objects that contain the carrier information
+// 2. setTableData: a callback function that takes in an array of objects as they are returned from CarrierForm and updates the tableData array
+// 3. quoteRequestDefined: a boolean that is true if the user has defined a quote request;
+// it is used to prevent the user from submitting the form if they have not defined a quote request
+
 export default function CarrierTable({
   tableData,
   quoteRequestDefined,

@@ -16,6 +16,10 @@ import { Alert } from "@mui/material";
 import { Box } from "@mui/material";
 import Modal from "@mui/material/Modal";
 
+//Dashboard is the main component of the application.
+//It contains the QuoteCard, SearchBar, and CarrierTable components
+//and performs the work of coordinating the data between them.
+
 export default function Dashboard() {
   const {
     register,
@@ -25,17 +29,11 @@ export default function Dashboard() {
     formState: { errors },
   } = useForm();
 
-  let formattedQuoteRequest;
+  // QUOTE OBJECT DEFINITION AND FORMAT HANDLING //
 
-  //tableData is being used right now to pass an empty array to the table when New Quote Request form is submitted
-  //it will also be used to update the table when a quote request is selected from the search bar
-  let [tableData, setTableData] = useState([]);
+  //quoteObject is being used to handle the data from the Quote Request Dialog pop up and pass it to the QuoteCard component;
+  //the initial state is an empty quoteObject.
 
-  //quote number is being used to increment pass the quote number to the QuoteCard component
-  const [quoteNumber, setQuoteNumber] = useState(1);
-
-  //quoteObject is being used to handle the data from the Quote Request Dialog pop up and pass it to the QuoteCard component
-  //the initial state is an empty quoteObject
   const [quoteObject, setQuoteObject] = useState({
     quoteNumber: "",
     quoteDate: new Date().toDateString(),
@@ -49,12 +47,28 @@ export default function Dashboard() {
     numberOfFeet: "Number of ",
   });
 
+  //quote number is being used to increment pass the quote number to the QuoteCard component
+  const [quoteNumber, setQuoteNumber] = useState(1);
+
+  //this is the function that formats the quote request object so that it can be passed to the search bar component
+  function formatQuoteRequest(quoteObject) {
+    let quoteRequest = {
+      quotenumber: quoteObject.quoteNumber,
+      display: `Quote Request ${quoteObject.quoteNumber}, ${quoteObject.numberOfPallets} Skids from ${quoteObject.origin} to ${quoteObject.destination} for ${quoteObject.customerName}`,
+    };
+
+    return quoteRequest;
+  }
+
   //this is an array of formatted quoteRequest objects that will be passed to the search bar component so they may be displayed in the search bar
   let [formattedQuoteRequestArray, setFormattedQuoteRequestArray] = useState(
     []
   );
 
-  //createDashboardObject is being used to combine the tableData and quoteObjectArray to make a dashboard object
+  //DASHBOARD OBJECT FUNCTIONS //
+  //These relate to both the download and search function, which both require a snapshot of the current state of the dashboard.
+
+  //createDashboardObject combines the tableData and quoteObjectArray to make a dashboard object
   function createDashBoardObject(quoteObject, tableData) {
     let dashBoardObject = {
       quoteObject: quoteObject,
@@ -63,30 +77,129 @@ export default function Dashboard() {
     return dashBoardObject;
   }
 
-  //dashboardObjectArray is an array of the objects that store the state of the entire dashboard, so that they may be recalled on search
+  //dashboardObjectArray is an array of the objects that store the state of the entire dashboard, so that they may be recalled on search or downloaded
   const [dashBoardObjectArray, setDashBoardObjectArray] = useState([]);
 
-  //this is the function that opens the quote request dialog
-  const [open, setOpen] = useState(false);
+  //this is the callback function that the search bar component will call when a search qurery is submitted, so that the dashboard can be updated
+  function updateDashBoard(dashBoardObject) {
+    setQuoteObject(dashBoardObject.quoteObject);
+    setTableData(dashBoardObject.tableDataArray);
+  }
 
-  //and these are the click handlers that handle both opening and closing the quote request dialog
+  //This function is used in the case where the user has entered a quote request and the corresponding carrier information,
+  //but does not want to create anothe quote request. It allows the current quote request (state of the Dashboard) to be searched and downloaded
+  //by adding it to the dashboardObjectArray.
+  const handleSaveQuoteRequest = () => {
+    if (dashBoardObjectArray.length === 0 && quoteObject.quoteNumber === "") {
+      handleSaveAlertModalOpen();
+    } else if (dashBoardObjectArray.length === 0) {
+      let newDashboardObject = createDashBoardObject(quoteObject, tableData);
+      setDashBoardObjectArray([...dashBoardObjectArray, newDashboardObject]);
+    } else {
+      let newDashboardObject = createDashBoardObject(quoteObject, tableData);
+      let lastElementIndex = dashBoardObjectArray.length - 1;
 
-  const handleClickOpen = () => {
-    setOpen(true);
+      if (
+        dashBoardObjectArray[lastElementIndex].quoteObject.quoteNumber ===
+        newDashboardObject.quoteObject.quoteNumber
+      ) {
+        //this pushes the new dashboard object to the dashboardObjectArray
+      } else {
+        setDashBoardObjectArray([...dashBoardObjectArray, newDashboardObject]);
+      }
+    }
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  //This handles the user request to download the state of the dashboard as list of quote requests
+  //and carrier quotes as a formatted txt file
+  const downloadTxtFile = () => {
+    let output = "Quote requests for " + new Date().toDateString() + "\n";
+    if (dashBoardObjectArray.length < 1) {
+      handleDownloadAlertModalOpen();
+    } else {
+      for (const dashBoardObject in dashBoardObjectArray) {
+        output += `\n\nQuote Request ${dashBoardObjectArray[dashBoardObject].quoteObject.quoteNumber}, ${dashBoardObjectArray[dashBoardObject].quoteObject.numberOfPallets} Skids from ${dashBoardObjectArray[dashBoardObject].quoteObject.origin} to ${dashBoardObjectArray[dashBoardObject].quoteObject.destination} for ${dashBoardObjectArray[dashBoardObject].quoteObject.customerName}\n`;
+        for (const data in dashBoardObjectArray[dashBoardObject]
+          .tableDataArray) {
+          output += `\n${dashBoardObjectArray[dashBoardObject].tableDataArray[data].carrierName}: ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].phoneNumber}, ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].dispatchEmail}\nSpoke with ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].contactName}, rate is $${dashBoardObjectArray[dashBoardObject].tableDataArray[data].rate}. Notes: ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].notes}  \n`;
+        }
+      }
+
+      const element = document.createElement("a");
+      const file = new Blob([output], {
+        type: "text/plain",
+      });
+      element.href = URL.createObjectURL(file);
+      const fileName = `Quote Requests for ${new Date().toDateString()}.txt`;
+      element.download = fileName;
+      document.body.appendChild(element); // Required for this to work in FireFox
+      element.click();
+    }
   };
 
+  //CARRIER TABLE RELATED FUNCTIONS//
+
+  //When the quoteObject array doesn't contain any user submitted data, the quote request is undefined.
+  //This is used to determine if the Add Carrier button in CarrierForm should be disabled or not
   const [quoteRequestDefined, setQuoteRequestDefined] = useState(false);
+  //tableData is being used right now to pass an empty array to the table when New Quote Request form is submitted
+  //it will also be used to update the table when a quote request is selected from the search bar
+  let [tableData, setTableData] = useState([]);
 
-  //this is the function that handles the submit of the quote request form
-  //it might be trying to do too much
+  //MODAL AND DIALOG HANDLERS//
+
+  //Quote request dialog modal//
+
+  const [quoteRequestDialogOpen, setQuoteRequestOpen] = useState(false);
+
+  const handleQuoteRequestOpen = () => {
+    setQuoteRequestOpen(true);
+  };
+
+  const handleQuoteRequestClose = () => {
+    setQuoteRequestOpen(false);
+  };
+
+  //Save Alert Modal//
+
+  const [openSaveAlertModal, setOpenSaveAlertModal] = useState(false);
+  function handleSaveAlertModalOpen() {
+    setOpenSaveAlertModal(true);
+  }
+
+  const handleSaveAlertModalClose = () => setOpenSaveAlertModal(false);
+
+  //Download Alert Modal//
+
+  const [openDownloadAlertModal, setOpenDownloadAlertModal] = useState(false);
+  function handleDownloadAlertModalOpen() {
+    setOpenDownloadAlertModal(true);
+  }
+
+  const handleDownloadAlertModalClose = () => setOpenDownloadAlertModal(false);
+
+  //Shared Modal Box Style//
+
+  const modalBoxStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+
+  //QUOTE REQUEST SUBMIT FUNCTION//
+
   const onSubmit = (event) => {
-    //all of this logic was implemented to try and get search to work
-
-    //creates a new dashboard object with the quoteObject and tableDataArray
+    //When the user first clicks Create New Quote Request, quoteObject still has empty properties.
+    //If this is the case, we don't add the corresponding Dashboard object to the Dashboard Object array,
+    //becaues the user hasn't yet entered any carrier data to accompany the quote request.
+    //For all future cases, we create a new Dashboard object from the previous quote request and table data,
+    //and add it to the Dashboard Object array so that it may be searched or downloaded.
 
     if (quoteObject.quoteNumber !== "") {
       handleSaveQuoteRequest();
@@ -115,106 +228,26 @@ export default function Dashboard() {
     //this sets the quoteRequestDefined state to true so that the carriertable component will render
     setQuoteRequestDefined(true);
 
-    //this creates a fornatted quote request object that will be compatible with the search bar
-    formattedQuoteRequest = formatQuoteRequest(newQuoteObject);
+    //this creates a fornmatted quote request object that will be compatible with the search bar
+    let formattedQuoteRequest = formatQuoteRequest(newQuoteObject);
 
-    //this is an array of formatted quoteRequest objects that will be passed to the search bar component so they may be displayed in the search bar
+    //this is an array of formatted quoteRequest objects that will be
+    //1. passed to the search bar component so they may be displayed in the search bar
+    //2. formatted for download as a txt file
+
     setFormattedQuoteRequestArray((state) => [...state, formattedQuoteRequest]);
 
-    //these functions reset the dialog form, pass an empty array to the table, and close the dialog
+    //these functions reset the dialog form, pass an empty array to the table to clear it, and close the quote request dialog
 
     reset();
     setTableData([]);
-
-    handleClose();
-  };
-
-  //this is the function that formats the quote request object so that it can be passed to the search bar component
-  function formatQuoteRequest(quoteObject) {
-    let quoteRequest = {
-      quotenumber: quoteObject.quoteNumber,
-      display: `Quote Request ${quoteObject.quoteNumber}, ${quoteObject.numberOfPallets} Skids from ${quoteObject.origin} to ${quoteObject.destination} for ${quoteObject.customerName}`,
-    };
-
-    return quoteRequest;
-  }
-
-  //this is the callback function that the search bar component will call when a search qurery is submitted, so that the dashboard can be updated
-  function updateDashBoard(dashBoardObject) {
-    setQuoteObject(dashBoardObject.quoteObject);
-    setTableData(dashBoardObject.tableDataArray);
-  }
-
-  function handleSaveQuoteRequest() {
-    if (dashBoardObjectArray.length === 0 && quoteObject.quoteNumber === "") {
-      alert("Please enter a quote request");
-    } else if (dashBoardObjectArray.length === 0) {
-      let newDashboardObject = createDashBoardObject(quoteObject, tableData);
-      setDashBoardObjectArray([...dashBoardObjectArray, newDashboardObject]);
-    } else {
-      let newDashboardObject = createDashBoardObject(quoteObject, tableData);
-      let lastElementIndex = dashBoardObjectArray.length - 1;
-
-      if (
-        dashBoardObjectArray[lastElementIndex].quoteObject.quoteNumber ===
-        newDashboardObject.quoteObject.quoteNumber
-      ) {
-        //this pushes the new dashboard object to the dashboardObjectArray
-        console.log("dashboard object already exists");
-      } else {
-        setDashBoardObjectArray([...dashBoardObjectArray, newDashboardObject]);
-      }
-    }
-  }
-  const downloadTxtFile = () => {
-    let output = "Quote requests for " + new Date().toDateString() + "\n";
-    if (dashBoardObjectArray.length < 1) {
-      handleDownloadAlertModalOpen();
-    } else {
-      for (const dashBoardObject in dashBoardObjectArray) {
-        output += `\n\nQuote Request ${dashBoardObjectArray[dashBoardObject].quoteObject.quoteNumber}, ${dashBoardObjectArray[dashBoardObject].quoteObject.numberOfPallets} Skids from ${dashBoardObjectArray[dashBoardObject].quoteObject.origin} to ${dashBoardObjectArray[dashBoardObject].quoteObject.destination} for ${dashBoardObjectArray[dashBoardObject].quoteObject.customerName}\n`;
-        for (const data in dashBoardObjectArray[dashBoardObject]
-          .tableDataArray) {
-          output += `\n${dashBoardObjectArray[dashBoardObject].tableDataArray[data].carrierName}: ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].phoneNumber}, ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].dispatchEmail}\nSpoke with ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].contactName}, rate is $${dashBoardObjectArray[dashBoardObject].tableDataArray[data].rate}. Notes: ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].notes}  \n`;
-        }
-      }
-
-      const element = document.createElement("a");
-      const file = new Blob([output], {
-        type: "text/plain",
-      });
-      element.href = URL.createObjectURL(file);
-      const fileName = `Quote Requests for ${new Date().toDateString()}.txt`;
-      element.download = fileName;
-      document.body.appendChild(element); // Required for this to work in FireFox
-      element.click();
-    }
-  };
-
-  //Modal displaying alert when download button is clicked before any quote requests are entered
-  const [openDownloadAlertModal, setOpenDownloadAlertModal] = useState(false);
-  function handleDownloadAlertModalOpen() {
-    setOpenDownloadAlertModal(true);
-  }
-
-  const handleDownloadAlertModalClose = () => setOpenDownloadAlertModal(false);
-
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
+    handleQuoteRequestClose();
   };
 
   return (
     <div>
       <CardActions sx={{ justifyContent: "flex-end" }}>
-        <Button variant="outlined" onClick={handleClickOpen}>
+        <Button variant="outlined" onClick={handleQuoteRequestOpen}>
           Create New Quote Request
         </Button>
         <Button variant="outlined" onClick={handleSaveQuoteRequest}>
@@ -228,7 +261,7 @@ export default function Dashboard() {
         open={openDownloadAlertModal}
         onClose={handleDownloadAlertModalClose}
       >
-        <Box sx={style}>
+        <Box sx={modalBoxStyle}>
           <Alert severity="info">
             You must first define a quote request before downloading quote
             requests. Click 'Create New Quote Request' to get started. If you
@@ -237,9 +270,17 @@ export default function Dashboard() {
           </Alert>
         </Box>
       </Modal>
+      <Modal open={openSaveAlertModal} onClose={handleSaveAlertModalClose}>
+        <Box sx={modalBoxStyle}>
+          <Alert severity="info">
+            You must first define a quote request before saving a quote request.
+            Click 'Create New Quote Request' to get started.
+          </Alert>
+        </Box>
+      </Modal>
 
       <div>
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={quoteRequestDialogOpen} onClose={handleQuoteRequestClose}>
           <DialogTitle>Enter Quote Information</DialogTitle>
           <DialogContent>
             <form id="dialogForm" onSubmit={handleSubmit(onSubmit)}>
@@ -408,7 +449,7 @@ export default function Dashboard() {
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleQuoteRequestClose}>Cancel</Button>
             <Button type="submit" form="dialogForm">
               Submit
             </Button>
@@ -419,7 +460,7 @@ export default function Dashboard() {
       <SearchBar
         updateDashboard={updateDashBoard}
         dashBoardObjectArray={dashBoardObjectArray}
-        quoteRequestArray={formattedQuoteRequestArray}
+        formattedQuoteRequestArray={formattedQuoteRequestArray}
       />
       <QuoteCard {...quoteObject} />
       <br />

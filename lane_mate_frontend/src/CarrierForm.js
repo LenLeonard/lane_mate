@@ -4,9 +4,13 @@ import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import { Controller, useForm } from "react-hook-form";
 import { Alert } from "@mui/material";
-
+import { useState } from "react";
 import Modal from "@mui/material/Modal";
 
+// CarrierForm is a component that allows the user to create a new carrier.
+// It takes two props:
+// 1. createNewEntryOnSubmit: a callback function that takes in the event returned from the form and returns it to CarrierTable so that it can be added to the table
+// 2. quoteRequestDefined: a boolean that is true if the user has defined a quote request;  it is used to prevent the user from submitting the form if they have not defined a quote request
 export default function CarrierForm({
   createNewEntryOnSubmit,
   quoteRequestDefined,
@@ -20,7 +24,33 @@ export default function CarrierForm({
     formState: { errors },
   } = useForm();
 
-  const style = {
+  //This function handles the submit event from the form, which is passed to the Dashboard component as a callback
+  //If the user has defined a quote request, the event is pushed to the tableData array via createNewEntryOnSubmit
+  //the carrier form is then reset to its initial state, and the focus is set to the carrier name input
+  //If the user has not defined a quote request, an alert is displayed to the user in a modal
+
+  const formSubmitandReset = (event) => {
+    if (quoteRequestDefined === true) {
+      createNewEntryOnSubmit(event);
+      reset();
+      setFocus("carrierName");
+    } else {
+      handleAlertModalOpen();
+    }
+  };
+
+  // Below is code related to the modal that is displayed when the user has not defined a quote request
+  ////////////////////////////////////////////////////////////////////
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleAlertModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => setModalOpen(false);
+
+  const modalBoxStyle = {
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -31,28 +61,12 @@ export default function CarrierForm({
     boxShadow: 24,
     p: 4,
   };
-
-  const formSubmitandReset = (event) => {
-    if (quoteRequestDefined === true) {
-      createNewEntryOnSubmit(event);
-      reset();
-      setFocus("carrierName");
-    } else {
-      handleOpen();
-    }
-  };
-
-  const [open, setOpen] = React.useState(false);
-  function handleOpen() {
-    setOpen(true);
-  }
-
-  const handleClose = () => setOpen(false);
+  ////////////////////////////////////////////////////////////////////
 
   return (
     <>
-      <Modal open={open} onClose={handleClose} onBackdropClick={handleClose}>
-        <Box sx={style}>
+      <Modal open={modalOpen} onClose={handleModalClose}>
+        <Box sx={modalBoxStyle}>
           <Alert severity="info">
             You must first define a quote request before adding a carrier. Click
             'Create New Quote Request' to get started.

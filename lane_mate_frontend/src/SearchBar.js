@@ -3,20 +3,24 @@ import TextField from "@mui/material/TextField";
 
 import Autocomplete from "@mui/material/Autocomplete";
 
-//compnent takes in the array of dashBoard objects and the function to update the dashboard
-//as well as an array of formatted quoteRequest objects to display
+//SearchBar is a component that allows the user to search for a quote request along with the accompanying carrier data.
+//It takes three props:
+//1. dashBoardObjectArray: an array of objects that each contain a quote request and the corresponding carrier information.
+//2. updateDashboard: a callback function that takes in a the dashBoardObejct returned from the search bar,
+//which updates the state of quoteObject and carrierTable in the Dashboard component.
+//3. formattedQuoteRequestArray: an array of objects that have been formatted to be displayed in the search bar.
 
 export default function SearchBar({
   updateDashboard,
   dashBoardObjectArray,
-  quoteRequestArray,
+  formattedQuoteRequestArray,
 }) {
   return (
     <Autocomplete
       freeSolo
       id="searchBar"
       disableClearable
-      options={quoteRequestArray.map((option) => option.display)}
+      options={formattedQuoteRequestArray.map((option) => option.display)}
       onChange={(event, value) => {
         populateDashboard(value, dashBoardObjectArray, updateDashboard);
       }}
