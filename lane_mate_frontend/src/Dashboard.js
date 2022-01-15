@@ -12,6 +12,9 @@ import { CardActions } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import CarrierTable from "./CarrierTable";
 import SearchBar from "./SearchBar";
+import { Alert } from "@mui/material";
+import { Box } from "@mui/material";
+import Modal from "@mui/material/Modal";
 
 export default function Dashboard() {
   const {
@@ -76,6 +79,8 @@ export default function Dashboard() {
     setOpen(false);
   };
 
+  const [quoteRequestDefined, setQuoteRequestDefined] = useState(false);
+
   //this is the function that handles the submit of the quote request form
   //it might be trying to do too much
   const onSubmit = (event) => {
@@ -106,6 +111,9 @@ export default function Dashboard() {
 
     //this sets the quoteObject state to the newQuoteObject and so re-renders the quote card component with the updated quoteObject
     setQuoteObject(newQuoteObject);
+
+    //this sets the quoteRequestDefined state to true so that the carriertable component will render
+    setQuoteRequestDefined(true);
 
     //this creates a fornatted quote request object that will be compatible with the search bar
     formattedQuoteRequest = formatQuoteRequest(newQuoteObject);
@@ -158,6 +166,50 @@ export default function Dashboard() {
       }
     }
   }
+  const downloadTxtFile = () => {
+    let output = "Quote requests for " + new Date().toDateString() + "\n";
+    if (dashBoardObjectArray.length < 1) {
+      handleDownloadAlertModalOpen();
+    } else {
+      for (const dashBoardObject in dashBoardObjectArray) {
+        output += `\n\nQuote Request ${dashBoardObjectArray[dashBoardObject].quoteObject.quoteNumber}, ${dashBoardObjectArray[dashBoardObject].quoteObject.numberOfPallets} Skids from ${dashBoardObjectArray[dashBoardObject].quoteObject.origin} to ${dashBoardObjectArray[dashBoardObject].quoteObject.destination} for ${dashBoardObjectArray[dashBoardObject].quoteObject.customerName}\n`;
+        for (const data in dashBoardObjectArray[dashBoardObject]
+          .tableDataArray) {
+          output += `\n${dashBoardObjectArray[dashBoardObject].tableDataArray[data].carrierName}: ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].phoneNumber}, ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].dispatchEmail}\nSpoke with ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].contactName}, rate is $${dashBoardObjectArray[dashBoardObject].tableDataArray[data].rate}. Notes: ${dashBoardObjectArray[dashBoardObject].tableDataArray[data].notes}  \n`;
+        }
+      }
+
+      const element = document.createElement("a");
+      const file = new Blob([output], {
+        type: "text/plain",
+      });
+      element.href = URL.createObjectURL(file);
+      const fileName = `Quote Requests for ${new Date().toDateString()}.txt`;
+      element.download = fileName;
+      document.body.appendChild(element); // Required for this to work in FireFox
+      element.click();
+    }
+  };
+
+  //Modal displaying alert when download button is clicked before any quote requests are entered
+  const [openDownloadAlertModal, setOpenDownloadAlertModal] = useState(false);
+  function handleDownloadAlertModalOpen() {
+    setOpenDownloadAlertModal(true);
+  }
+
+  const handleDownloadAlertModalClose = () => setOpenDownloadAlertModal(false);
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
 
   return (
     <div>
@@ -168,7 +220,23 @@ export default function Dashboard() {
         <Button variant="outlined" onClick={handleSaveQuoteRequest}>
           Save Quote Request
         </Button>
+        <Button variant="outlined" onClick={downloadTxtFile}>
+          Download Quote Requests
+        </Button>
       </CardActions>
+      <Modal
+        open={openDownloadAlertModal}
+        onClose={handleDownloadAlertModalClose}
+      >
+        <Box sx={style}>
+          <Alert severity="info">
+            You must first define a quote request before downloading quote
+            requests. Click 'Create New Quote Request' to get started. If you
+            have entered a quote request, please click 'Save Quote Request' to
+            save it.
+          </Alert>
+        </Box>
+      </Modal>
 
       <div>
         <Dialog open={open} onClose={handleClose}>
@@ -192,6 +260,7 @@ export default function Dashboard() {
                     label="Customer"
                     type="outline"
                     variant="standard"
+                    required
                   />
                 )}
               />
@@ -208,6 +277,7 @@ export default function Dashboard() {
                     label="Origin"
                     type="outline"
                     variant="standard"
+                    required
                   />
                 )}
               />
@@ -224,6 +294,7 @@ export default function Dashboard() {
                     label="Destination"
                     type="outline"
                     variant="standard"
+                    required
                   />
                 )}
               />
@@ -240,6 +311,7 @@ export default function Dashboard() {
                     label="Equipment Type"
                     type="outline"
                     variant="standard"
+                    required
                   />
                 )}
               />
@@ -255,6 +327,7 @@ export default function Dashboard() {
                     label="Weight"
                     type="outline"
                     variant="standard"
+                    required
                     {...register("weight", {
                       pattern: {
                         value: /^\d+(\.\d{1,2})?$/,
@@ -278,6 +351,7 @@ export default function Dashboard() {
                     label="Number of Pallets"
                     type="outline"
                     variant="standard"
+                    required
                     {...register("numberOfPallets", {
                       pattern: {
                         value: /^\d+(\.\d{1,2})?$/,
@@ -302,6 +376,7 @@ export default function Dashboard() {
                     label="Number of Feet"
                     type="outline"
                     variant="standard"
+                    required
                     {...register("numberOfFeet", {
                       pattern: {
                         value: /^\d+(\.\d{1,2})?$/,
@@ -340,6 +415,7 @@ export default function Dashboard() {
           </DialogActions>
         </Dialog>
       </div>
+
       <SearchBar
         updateDashboard={updateDashBoard}
         dashBoardObjectArray={dashBoardObjectArray}
@@ -348,7 +424,11 @@ export default function Dashboard() {
       <QuoteCard {...quoteObject} />
       <br />
 
-      <CarrierTable tableData={tableData} setTableData={setTableData} />
+      <CarrierTable
+        tableData={tableData}
+        setTableData={setTableData}
+        quoteRequestDefined={quoteRequestDefined}
+      />
     </div>
   );
 }

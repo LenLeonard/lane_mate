@@ -12,7 +12,7 @@ import CarrierForm from "./CarrierForm";
 // This is the component that renders the table
 export default function CarrierTable({
   tableData,
-
+  quoteRequestDefined,
   setTableData,
 }) {
   //rows is an array of objects, each a submit event returned from CarrierForm that will be displayed in the table
@@ -24,7 +24,9 @@ export default function CarrierTable({
   //which is rendered in the Dashboard component. It takes the event from the form and pushes it to the tableData array,
   //which is then rendered dynamically in the table and then returned to the Dashboard component, where it is stored for search
   const createNewEntryOnSubmit = (event) => {
-    setTableData([...tableData, event]);
+    if (quoteRequestDefined === true) {
+      setTableData([...tableData, event]);
+    }
   };
 
   return (
@@ -63,7 +65,10 @@ export default function CarrierTable({
         </TableContainer>
       </div>
       <div>
-        <CarrierForm createNewEntryOnSubmit={createNewEntryOnSubmit} />
+        <CarrierForm
+          createNewEntryOnSubmit={createNewEntryOnSubmit}
+          quoteRequestDefined={quoteRequestDefined}
+        />
       </div>
     </div>
   );
