@@ -4,6 +4,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 
 //QuoteCard takes in a quoteRequest object and displays the current quoteRequest information in a card
 export default function QuoteCard({
+  handleQuoteRequestOpen,
   dimensions,
   numberOfFeet,
   numberOfPallets,
@@ -17,7 +18,14 @@ export default function QuoteCard({
 }) {
   return (
     <Card>
-      <CardHeader title={"Quote Request " + quoteNumber} />
+      {quoteNumber === "" ? (
+        <CardHeader
+          title={"Enter a Quote Request "}
+          onClick={handleQuoteRequestOpen}
+        />
+      ) : (
+        <CardHeader title={"Quote Request " + quoteNumber} />
+      )}
       <CardContent>
         <span className="laneCardText" title="Customer">
           {"// " + customerName + " //"}

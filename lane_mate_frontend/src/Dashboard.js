@@ -15,6 +15,7 @@ import SearchBar from "./SearchBar";
 import { Alert } from "@mui/material";
 import { Box } from "@mui/material";
 import Modal from "@mui/material/Modal";
+import { Snackbar } from "@material-ui/core";
 
 //Dashboard is the main component of the application.
 //It contains the QuoteCard, SearchBar, and CarrierTable components
@@ -95,6 +96,7 @@ export default function Dashboard() {
     } else if (dashBoardObjectArray.length === 0) {
       let newDashboardObject = createDashBoardObject(quoteObject, tableData);
       setDashBoardObjectArray([...dashBoardObjectArray, newDashboardObject]);
+      handleSaveConfirmationSnackbarOpen();
     } else {
       let newDashboardObject = createDashBoardObject(quoteObject, tableData);
       let lastElementIndex = dashBoardObjectArray.length - 1;
@@ -106,6 +108,7 @@ export default function Dashboard() {
         //this pushes the new dashboard object to the dashboardObjectArray
       } else {
         setDashBoardObjectArray([...dashBoardObjectArray, newDashboardObject]);
+        handleSaveConfirmationSnackbarOpen();
       }
     }
   };
@@ -168,6 +171,16 @@ export default function Dashboard() {
   }
 
   const handleSaveAlertModalClose = () => setOpenSaveAlertModal(false);
+
+  //Save Confirmation Snackbar//
+  const [openSaveConfirmationSnackbar, setOpenSaveConfirmationSnackbar] =
+    useState(false);
+  function handleSaveConfirmationSnackbarOpen() {
+    setOpenSaveConfirmationSnackbar(true);
+  }
+
+  const handleSaveConfirmationSnackbarClose = () =>
+    setOpenSaveConfirmationSnackbar(false);
 
   //Download Alert Modal//
 
@@ -246,6 +259,20 @@ export default function Dashboard() {
 
   return (
     <div>
+      <Snackbar
+        open={openSaveConfirmationSnackbar}
+        autoHideDuration={3000}
+        onClose={handleSaveConfirmationSnackbarClose}
+      >
+        <Alert
+          onClose={handleSaveConfirmationSnackbarClose}
+          elevation={6}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Quote Request Saved!
+        </Alert>
+      </Snackbar>
       <CardActions sx={{ justifyContent: "flex-end" }}>
         <Button variant="outlined" onClick={handleQuoteRequestOpen}>
           Create New Quote Request
@@ -314,7 +341,7 @@ export default function Dashboard() {
                     onChange={onChange}
                     autoFocus
                     margin="dense"
-                    id="name"
+                    id="origin"
                     label="Origin"
                     type="outline"
                     variant="standard"
@@ -331,7 +358,7 @@ export default function Dashboard() {
                     onChange={onChange}
                     autoFocus
                     margin="dense"
-                    id="name"
+                    id="destination"
                     label="Destination"
                     type="outline"
                     variant="standard"
@@ -348,7 +375,7 @@ export default function Dashboard() {
                     onChange={onChange}
                     autoFocus
                     margin="dense"
-                    id="name"
+                    id="equipmentType"
                     label="Equipment Type"
                     type="outline"
                     variant="standard"
@@ -365,6 +392,7 @@ export default function Dashboard() {
                     onChange={onChange}
                     autoFocus
                     margin="dense"
+                    id="weight"
                     label="Weight"
                     type="outline"
                     variant="standard"
@@ -389,6 +417,7 @@ export default function Dashboard() {
                     onChange={onChange}
                     autoFocus
                     margin="dense"
+                    id="numberOfPallets"
                     label="Number of Pallets"
                     type="outline"
                     variant="standard"
@@ -414,6 +443,7 @@ export default function Dashboard() {
                     onChange={onChange}
                     autoFocus
                     margin="dense"
+                    id="numberOfFeet"
                     label="Number of Feet"
                     type="outline"
                     variant="standard"
@@ -439,6 +469,7 @@ export default function Dashboard() {
                     onChange={onChange}
                     autoFocus
                     margin="dense"
+                    id="dimensions"
                     label="Dimensions"
                     type="outline"
                     variant="standard"
@@ -462,7 +493,10 @@ export default function Dashboard() {
         dashBoardObjectArray={dashBoardObjectArray}
         formattedQuoteRequestArray={formattedQuoteRequestArray}
       />
-      <QuoteCard {...quoteObject} />
+      <QuoteCard
+        {...quoteObject}
+        handleQuoteRequestOpen={handleQuoteRequestOpen}
+      />
       <br />
 
       <CarrierTable

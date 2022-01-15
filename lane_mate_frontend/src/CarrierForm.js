@@ -29,8 +29,22 @@ export default function CarrierForm({
   //the carrier form is then reset to its initial state, and the focus is set to the carrier name input
   //If the user has not defined a quote request, an alert is displayed to the user in a modal
 
+  //Function used to format the phone number input
+  const formatPhoneNumber = (phoneNumber) => {
+    let regexObj = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if (regexObj.test(phoneNumber)) {
+      let formattedPhoneNumber = phoneNumber.replace(regexObj, "($1) $2-$3");
+      return formattedPhoneNumber;
+    } else {
+      // Invalid phone number
+    }
+  };
+
   const formSubmitandReset = (event) => {
     if (quoteRequestDefined === true) {
+      let formattedPhoneNumber = formatPhoneNumber(event.phoneNumber);
+      event.phoneNumber = formattedPhoneNumber;
+
       createNewEntryOnSubmit(event);
       reset();
       setFocus("carrierName");
@@ -100,6 +114,7 @@ export default function CarrierForm({
           />
           <Controller
             name="phoneNumber"
+            id="phoneNumber"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
@@ -112,7 +127,7 @@ export default function CarrierForm({
                 color="secondary"
                 {...register("phoneNumber", {
                   pattern: {
-                    value: /^\d{10}$/,
+                    value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
                     message: "Phone number must be a 10 digit number",
                   },
                 })}
@@ -123,6 +138,7 @@ export default function CarrierForm({
           />
           <Controller
             name="dispatchEmail"
+            id="dispatchEmail"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
@@ -146,6 +162,7 @@ export default function CarrierForm({
           />
           <Controller
             name="contactName"
+            id="contactName"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
@@ -161,6 +178,7 @@ export default function CarrierForm({
           />
           <Controller
             name="rate"
+            id="rate"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
@@ -185,6 +203,7 @@ export default function CarrierForm({
           />
           <Controller
             name="notes"
+            id="notes"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
