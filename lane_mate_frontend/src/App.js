@@ -9,7 +9,6 @@ import Dashboard from "./Dashboard";
 function App() {
   return (
     <div className="App">
-      <TopBar />
       <Header />
       <Dashboard />
     </div>

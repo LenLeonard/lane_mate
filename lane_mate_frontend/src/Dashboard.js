@@ -487,18 +487,24 @@ export default function Dashboard() {
           </DialogActions>
         </Dialog>
       </div>
+      <br />
 
       <SearchBar
         updateDashboard={updateDashBoard}
         dashBoardObjectArray={dashBoardObjectArray}
         formattedQuoteRequestArray={formattedQuoteRequestArray}
       />
-      <QuoteCard
-        {...quoteObject}
-        handleQuoteRequestOpen={handleQuoteRequestOpen}
-      />
       <br />
-
+      <br />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <QuoteCard
+          {...quoteObject}
+          handleQuoteRequestOpen={handleQuoteRequestOpen}
+        />
+      </div>
+      <br />
+      <br />
+      <br />
       <CarrierTable
         tableData={tableData}
         setTableData={setTableData}

@@ -13,26 +13,6 @@
   color: white;
 }
 
-.logo {
-  height: 200px;
-  width: 250px;
-}
-.header {
-  text-align: center;
-  padding: 15px 0;
-  background-color: #cedef4;
-  font-weight: bold;
-  color: #000000;
-  position: rela1tive;
-  font-size: 1.5em;
-  font-family: "Roboto", sans-serif;
-}
-.header img {
-  position: absolute;
-  left: 15px;
-  top: 65px;
-}
-
 .laneCardText {
   font-size: 20px;
 }

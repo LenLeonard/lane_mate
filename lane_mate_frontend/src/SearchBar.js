@@ -17,6 +17,7 @@ export default function SearchBar({
 }) {
   return (
     <Autocomplete
+      sx={{ width: "50%", margin: "auto" }}
       freeSolo
       id="searchBar"
       disableClearable
@@ -27,7 +28,7 @@ export default function SearchBar({
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Search input"
+          label="Search by Quote Request Number, Customer Name, Origin, or Destination"
           InputProps={{
             ...params.InputProps,
             type: "search",

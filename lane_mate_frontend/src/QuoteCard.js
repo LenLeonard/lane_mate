@@ -17,7 +17,7 @@ export default function QuoteCard({
   weight,
 }) {
   return (
-    <Card>
+    <Card elevation={6}>
       {quoteNumber === "" ? (
         <CardHeader
           title={"Enter a Quote Request "}

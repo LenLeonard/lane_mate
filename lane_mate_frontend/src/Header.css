@@ -1,0 +1,19 @@
+.header {
+  text-align: center;
+  padding: 15px 0;
+  background-color: #cedef4;
+  font-weight: bold;
+  color: #000000;
+  position: rela1tive;
+  font-size: 1.5em;
+  font-family: "Roboto", sans-serif;
+}
+
+.logo {
+  float: left;
+  width: 150px;
+  height: auto;
+  top: 0;
+  left: 0;
+  position: absolute;
+}

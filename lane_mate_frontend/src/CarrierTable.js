@@ -55,9 +55,7 @@ export default function CarrierTable({
                   key={row.carrierName}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">
-                    {row.carrierName}
-                  </TableCell>
+                  <TableCell align="left">{row.carrierName}</TableCell>
                   <TableCell align="right">{row.phoneNumber}</TableCell>
                   <TableCell align="right">{row.dispatchEmail}</TableCell>
                   <TableCell align="right">{row.contactName}</TableCell>
