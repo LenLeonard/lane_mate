@@ -23,7 +23,7 @@ a rough estimate of how much it would cost to perform the same job again. In sho
 1) User receives a quote request from a customer in an email.
 2) They open lane_mate and enter the quote request information by clicking 'Create Quote Request' and filling out the form.
 3) They post the load on the load board, and wait for carriers to call with offers.
-4) While fielding calls from carreirs, the user fills out the form for each carrier and adds their information their rate/offer to the table.
+4) While fielding calls from carriers, the user fills out the form for each carrier and adds their information their rate/offer to the table.
 5) Once the broker has gathered enough offers, they save the quote request so that it can be retrieved later. 
 6) The broker selects a winning carrier, adds their margin, and resonds to the customer with a quote.
 
