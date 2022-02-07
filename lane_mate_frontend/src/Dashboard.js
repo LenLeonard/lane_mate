@@ -1,34 +1,79 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+
 import { useState } from "react";
 import QuoteCard from "./QuoteCard";
 import { CardActions } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import CarrierTable from "./CarrierTable";
 import SearchBar from "./SearchBar";
 import { Alert } from "@mui/material";
 import { Box } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { Snackbar } from "@material-ui/core";
+import CarrierDialog from "./CarrierDialog";
+import QuoteRequestDialog from "./QuoteRequestDialog";
+import CustomerDialog from "./CustomerDialog";
+import QuoteRequestComponent from "./QuoteRequestComponent";
+import OfferTableComponent from "./OfferTableComponent";
 
 //Dashboard is the main component of the application.
 //It contains the QuoteCard, SearchBar, and CarrierTable components
 //and performs the work of coordinating the data between them.
 
 export default function Dashboard() {
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm();
+  //client side Auth stuff
+  const logout = () => {
+    localStorage.removeItem("Access Token");
+    localStorage.removeItem("Refresh Token");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userId");
+    window.location.href = "/login";
+  };
+
+  function checkToken() {
+    const token = localStorage.getItem("Access Token");
+
+    const decodedToken = atob(token.split(".")[1]);
+
+    const tokenExpiration = JSON.parse(decodedToken).exp;
+    const currentTime = Math.floor(Date.now() / 1000);
+    console.log(tokenExpiration - currentTime);
+    if (tokenExpiration < currentTime) {
+      logout();
+    }
+  }
+
+  async function refreshToken() {
+    try {
+      const refreshToken = localStorage.getItem("Refresh Token");
+      const body = JSON.stringify({
+        refreshToken: refreshToken,
+      });
+      const response = await fetch("http://localhost:5000/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      });
+      const json = await response.json();
+      console.log(json);
+
+      localStorage.setItem("Access Token", json.accessToken);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+  //checkToken();
+  //setInterval(() => refreshToken(), 1000 * 60 * 29);
+  //setInterval(() => checkToken(), 1000 * 60 * 30);
+
+  const { reset, handleSubmit } = useForm();
+
+  //LOAD UP CARRIERS
+  const [carriers, setCarriers] = useState([]);
 
   // QUOTE OBJECT DEFINITION AND FORMAT HANDLING //
 
@@ -91,6 +136,66 @@ export default function Dashboard() {
   //but does not want to create anothe quote request. It allows the current quote request (state of the Dashboard) to be searched and downloaded
   //by adding it to the dashboardObjectArray.
   const handleSaveQuoteRequest = () => {
+    console.log(tableData);
+
+    async function addCarrierToDatabase(carrier) {
+      try {
+        const response = await fetch("http://localhost:5000/carriers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(carrier),
+        });
+        if (response.status === 200) {
+          try {
+            //try to get the carriers from the database
+            const response = await fetch("http://localhost:5000/carriers");
+            const jsonData = await response.json(); //convert the response to json
+
+            setCarriers(jsonData);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    async function getCarrierIDByNameFromDatabase(carrierName) {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/carriers?carrier_name=${carrierName}`
+        );
+        const jsonData = await response.json(); //convert the response to json
+        console.log(jsonData);
+        return jsonData[0].id;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    tableData.forEach((offer) => {
+      if (carriers.includes(offer.carrierName)) {
+        let carrier_id = carriers.find(
+          (carrier) => carrier.carrier_name === offer.carrierName
+        ).id;
+      } else {
+        let carrier = {
+          carrier_name: offer.carrierName,
+          phone: offer.phone,
+          contact_email: offer.email,
+          contact_name: offer.contactName,
+          contact_ext: offer.extension,
+        };
+        addCarrierToDatabase(carrier);
+        const carrier_id = getCarrierIDByNameFromDatabase(offer.carrierName);
+        console.log(offer.carrierName);
+        console.log(carrier_id);
+      }
+    });
+
     if (dashBoardObjectArray.length === 0 && quoteObject.quoteNumber === "") {
       handleSaveAlertModalOpen();
     } else if (dashBoardObjectArray.length === 0) {
@@ -163,6 +268,30 @@ export default function Dashboard() {
     setQuoteRequestOpen(false);
   };
 
+  //Customer dialog modal//
+
+  const [customerDialogOpen, setCustomerDialogOpen] = useState(false);
+
+  const handleCustomerDialogOpen = () => {
+    setCustomerDialogOpen(true);
+  };
+
+  const handleCustomerDialogClose = () => {
+    setCustomerDialogOpen(false);
+  };
+
+  //Customer dialog modal//
+
+  const [carrierDialogOpen, setCarrierDialogOpen] = useState(false);
+
+  const handleCarrierDialogOpen = () => {
+    setCarrierDialogOpen(true);
+  };
+
+  const handleCarrierDialogClose = () => {
+    setCarrierDialogOpen(false);
+  };
+
   //Save Alert Modal//
 
   const [openSaveAlertModal, setOpenSaveAlertModal] = useState(false);
@@ -214,6 +343,8 @@ export default function Dashboard() {
     //For all future cases, we create a new Dashboard object from the previous quote request and table data,
     //and add it to the Dashboard Object array so that it may be searched or downloaded.
 
+    console.log(event);
+
     if (quoteObject.quoteNumber !== "") {
       handleSaveQuoteRequest();
     }
@@ -225,15 +356,55 @@ export default function Dashboard() {
     let newQuoteObject = {
       quoteNumber: quoteNumber,
       quoteDate: new Date().toDateString(),
-      customerName: event.customerName,
-      origin: event.origin,
-      destination: event.destination,
+      customerName: event.customerCompanyName,
+      origin: event.originCities[0].city_id,
+      destination: event.destinationCities[0].city_id,
       equipmentType: event.equipmentType,
-      weight: event.weight,
-      numberOfPallets: event.numberOfPallets,
-      dimensions: event.dimensions,
-      numberOfFeet: event.numberOfFeet,
+      weight: event.totalPalletWeight,
+      numberOfPallets: event.numPallets,
+      dimensions: JSON.stringify(event.dimensions),
+      numberOfFeet: event.linearFeet,
     };
+
+    //commit lane_stops info to the database
+
+    let laneStops = [];
+    event.originCities.forEach((city) => {
+      laneStops.push({
+        quote_request_id: quoteNumber,
+        city_id: city.city_id,
+        is_origin: city.is_origin,
+      });
+    });
+
+    event.destinationCities.forEach((city) => {
+      laneStops.push({
+        quote_request_id: quoteNumber,
+        city_id: city.city_id,
+        is_origin: city.is_origin,
+      });
+    });
+
+    async function commitLaneStops(lane_stop) {
+      try {
+        const response = await fetch("http://localhost:5000/lane_stops", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(lane_stop),
+        });
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    laneStops.forEach((lane_stop) => {
+      commitLaneStops(lane_stop);
+      laneStops = [];
+    });
 
     //this sets the quoteObject state to the newQuoteObject and so re-renders the quote card component with the updated quoteObject
     setQuoteObject(newQuoteObject);
@@ -274,6 +445,15 @@ export default function Dashboard() {
         </Alert>
       </Snackbar>
       <CardActions sx={{ justifyContent: "flex-end" }}>
+        <Button variant="outlined" onClick={logout}>
+          logout
+        </Button>
+        <Button variant="outlined" onClick={handleCustomerDialogOpen}>
+          Customers
+        </Button>
+        <Button variant="outlined" onClick={handleCarrierDialogOpen}>
+          Carriers
+        </Button>
         <Button variant="outlined" onClick={handleQuoteRequestOpen}>
           Create New Quote Request
         </Button>
@@ -306,189 +486,29 @@ export default function Dashboard() {
         </Box>
       </Modal>
 
-      <div>
-        <Dialog open={quoteRequestDialogOpen} onClose={handleQuoteRequestClose}>
-          <DialogTitle>Enter Quote Information</DialogTitle>
-          <DialogContent>
-            <form id="dialogForm" onSubmit={handleSubmit(onSubmit)}>
-              <DialogContentText>
-                Please enter Customer name, date, destination, orgin, equipment
-                type, weight, number of pallets and dimensions.
-              </DialogContentText>
-              <Controller
-                name="customerName"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    value={value || ""}
-                    onChange={onChange}
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    label="Customer"
-                    type="outline"
-                    variant="standard"
-                    required
-                  />
-                )}
-              />
-              <Controller
-                name="origin"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    value={value || ""}
-                    onChange={onChange}
-                    autoFocus
-                    margin="dense"
-                    id="origin"
-                    label="Origin"
-                    type="outline"
-                    variant="standard"
-                    required
-                  />
-                )}
-              />
-              <Controller
-                name="destination"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    value={value || ""}
-                    onChange={onChange}
-                    autoFocus
-                    margin="dense"
-                    id="destination"
-                    label="Destination"
-                    type="outline"
-                    variant="standard"
-                    required
-                  />
-                )}
-              />
-              <Controller
-                name="equipmentType"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    value={value || ""}
-                    onChange={onChange}
-                    autoFocus
-                    margin="dense"
-                    id="equipmentType"
-                    label="Equipment Type"
-                    type="outline"
-                    variant="standard"
-                    required
-                  />
-                )}
-              />
-              <Controller
-                name="weight"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    value={value || ""}
-                    onChange={onChange}
-                    autoFocus
-                    margin="dense"
-                    id="weight"
-                    label="Weight"
-                    type="outline"
-                    variant="standard"
-                    required
-                    {...register("weight", {
-                      pattern: {
-                        value: /^\d+(\.\d{1,2})?$/,
-                        message: "Weight must be a number",
-                      },
-                    })}
-                    error={!!errors?.weight}
-                    helperText={errors?.weight?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="numberOfPallets"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    value={value || ""}
-                    onChange={onChange}
-                    autoFocus
-                    margin="dense"
-                    id="numberOfPallets"
-                    label="Number of Pallets"
-                    type="outline"
-                    variant="standard"
-                    required
-                    {...register("numberOfPallets", {
-                      pattern: {
-                        value: /^\d+(\.\d{1,2})?$/,
-                        message: "Number of Pallets must be a number",
-                      },
-                    })}
-                    error={!!errors?.numberOfPallets}
-                    helperText={errors?.numberOfPallets?.message}
-                  />
-                )}
-              />
-
-              <Controller
-                name="numberOfFeet"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    value={value || ""}
-                    onChange={onChange}
-                    autoFocus
-                    margin="dense"
-                    id="numberOfFeet"
-                    label="Number of Feet"
-                    type="outline"
-                    variant="standard"
-                    required
-                    {...register("numberOfFeet", {
-                      pattern: {
-                        value: /^\d+(\.\d{1,2})?$/,
-                        message: "Number of Feet must be a number",
-                      },
-                    })}
-                    error={!!errors?.numberOfFeet}
-                    helperText={errors?.numberOfFeet?.message}
-                  />
-                )}
-              />
-
-              <Controller
-                name="dimensions"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    value={value || ""}
-                    onChange={onChange}
-                    autoFocus
-                    margin="dense"
-                    id="dimensions"
-                    label="Dimensions"
-                    type="outline"
-                    variant="standard"
-                  />
-                )}
-              />
-            </form>
-          </DialogContent>
-
-          <DialogActions>
-            <Button onClick={handleQuoteRequestClose}>Cancel</Button>
-            <Button type="submit" form="dialogForm">
-              Submit
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-      <br />
-
+      <>
+        <QuoteRequestComponent
+          handleQuoteRequestClose={handleQuoteRequestClose}
+          quoteRequestDialogOpen={quoteRequestDialogOpen}
+          setQuoteRequestOpen={setQuoteRequestOpen}
+          onSubmit={onSubmit}
+          handleSubmit={handleSubmit}
+        />
+      </>
+      <>
+        <CustomerDialog
+          handleCustomerDialogClose={handleCustomerDialogClose}
+          customerDialogOpen={customerDialogOpen}
+          onSubmit={onSubmit}
+        />
+        <CarrierDialog
+          handleCarrierDialogClose={handleCarrierDialogClose}
+          carrierDialogOpen={carrierDialogOpen}
+          onSubmit={onSubmit}
+          carriers={carriers}
+          setCarriers={setCarriers}
+        />
+      </>
       <SearchBar
         updateDashboard={updateDashBoard}
         dashBoardObjectArray={dashBoardObjectArray}

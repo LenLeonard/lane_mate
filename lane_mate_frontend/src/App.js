@@ -1,17 +1,20 @@
 import "./App.css";
 
-import TopBar from "./TopBar";
-
-import Header from "./Header";
-
 import Dashboard from "./Dashboard";
+
+import SignInSide from "./SignInSide";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SignUp from "./SignUp";
 
 function App() {
   return (
-    <div className="App">
-      <Header />
-      <Dashboard />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/login" element={<SignInSide />} />
+        <Route path="/signUp" element={<SignUp />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

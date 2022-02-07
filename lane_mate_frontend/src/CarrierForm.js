@@ -136,6 +136,30 @@ export default function CarrierForm({
               />
             )}
           />
+
+          <Controller
+            name="extension"
+            id="extension"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value } }) => (
+              <TextField
+                value={value || ""}
+                onChange={onChange}
+                label="Extension"
+                variant="outlined"
+                margin="normal"
+                color="secondary"
+                {...register("extension", {
+                  pattern: {
+                    message: "Extension must be between 1 and 4 digits",
+                  },
+                })}
+                error={!!errors?.extension}
+                helperText={errors?.extension?.message}
+              />
+            )}
+          />
           <Controller
             name="dispatchEmail"
             id="dispatchEmail"

@@ -1,0 +1,178 @@
+//Lane_Mate Notes Jan. 20//
+
+Afternoon task:
+create a front end test ui for doing CRUD operations on all the tables
+
+Look into AWS
+
+There is potential here for vetting carriers.
+This is an application that handles 
+taking quote requests from the customer
+dealing with the spot market
+returning the quote to the customer
+
+- Keep track of quotes given
+- Keep track of carrier on given lanes; leads
+- Helps you build a database of carriers
+- Checks MC numbers, gets information, returns how trustworthy
+- Potentially just putting in MC number, getting rate would be fastest, and most secure
+- adding a feature that sent a formatted email would be awesome;
+allow the user to customize it??
+-make templates?
+-select a quote, which brings you to another screen where you 
+send the quote response
+-make a quote response object?
+-it should be simple at first, and reveal complexity and flexibility
+-carrier management?
+if you keep track of what margins were when your bids were successful, you could eventually optimize how much to mark 
+something up
+
+SAFER WATCH integration
+https://www.saferwatch.com/helpdocs/WebServices/Keys.php?version=32
+
+Google SEARCH integration
+https://developers.google.com/custom-search/docs/overview
+
+//Jan.21//
+
+Add website to Carrier info
+
+UI should reveal essential features that are used 80% of the time
+and then show complex options at the users request
+When showing load info, only show the weight and skid count and any special consideration
+on edit, have a 'more options' tab.
+
+//Jan.22//
+
+Perhaps focus on the core functionality
+and actively not try to be a TMS.
+Do we need to store extensive load and carrier info?
+Well what is the cost of it? A little up front work?
+You don't need to show it to the user.
+Should I have different files on the backend to organize each API?
+Is there a way to render all these ui elements dynamically?
+
+I'm having trouble thinking through the process of POSTing a row to a table
+when one of the columns in that row is a foreign key
+which references a row in another table 
+whose columns depend on user input
+
+settings has to have a default weight measurement
+
+As control flow
+
+if is_palletized is true AND pallets_same_dims is false:
+
+i) show dialog to enter pallet dimension information,
+which corresponds to the 
+columns in the pallet_dims table
+
+ii)the id of this row will then be passed 
+as a property on the object that will be stored in the loads table
+-its state is going to have to be stored in between, because it's 
+going to have to be submitted when the whole form is.
+
+else if is_palletized is true and pallets_same_dims is true:
+ask how many pallets and if pallets are standard sized and how heavy are they?
+if they are standard sized, populate pallet_dims with num_pallets at 48' x 40' x 72'
+pass the id as on the load object to be added to the loads table
+
+
+Maybe we should always assume that pallets are equal size and dims, because in a lot of
+situations, that will be the case. One click of custom dimensions 
+would allow you to bring up another menu and input that info.
+So by default, pallets_same_dims is true and all of that logic is bypassed.
+
+In any case, to simplify this, move on from customizable pallet sizes?
+
+If I need to add a load to a table that requires another table's key,
+the input function form will return a value that is saved in a variable
+in the scope of the function that sumbits the POST request.
+That variable is then added to the object.
+
+Build a pallet form dialog Component
+carrier form dialog Component
+Customer form dialog Component
+additional picks_drops_component
+offer table Component
+quote request Component
+
+Will I need react context?
+
+-Look to polaris for inspo, don't reinvent the wheel.
+The work flow will be similar, but will facilitate a wider range of inputs
+
+//Jan 23//
+
+1) I'm building out a ui to practise dealing with the database, 
+but I'm at the point where the compnents I create will depend on 
+UX design. UX -> UI
+For example, should the form that handles data entry for pallets
+appear as a modal dialog only if pallets aren't standard?
+Polaris has you adding one pallet at a time, but they only ship < 4 at one time.
+- Add pallets, have the option to set a number of pallets and dims.
+Perhaps two main flows: 
+
+the quote request set up flow, which handles:
+-enter customer
+- enter pickup date 
+- add origins and destinations
+- add equipment type
+- add handling units and dimensions
+- add special attributes and instructions
+
+and the carrier offer flow, which handles:
+-user input of carrier and offer information
+
+This week:
+Worked on SQL,
+Built the schema,
+and then got all the tables made
+hooked them up to a front end
+now
+
+- SQL Transcations
+- Authorization Authenication
+- Refactor SQL Schema: as flat as possible, easy to join
+- use as little foreign keys as possible
+- take a look web security
+- MVC Design patterm
+
+
+//Jan. 26//
+I'm beginning to think about this as a carrier management tool,
+and a tool for preparing quotes for customers
+its a tool to help you find trucks
+imagine a map that places all the kinds of equipment you've been quoted on
+the real value prop is what we can do with the data collection that 
+happens when a broker takes quotes from many carriers.
+you should be able to search by lane, and return
+all the carriers that run on it, and sort by equipment
+"give me all the carriers who run flat beds from Edmonton to Toronto"
+a part of this is prospecting for new carriers:
+imagine your company has a huge rfp; each rep is assigned a region
+you can the search through all of the carriers who called you on a lane
+if you work this way for 5 years, you will have a big database of carriers to draw from
+
+//Jan. 27//
+Number of feet should automatically calculate on entry
+add one line short description to quote request entry
+UI stuff
+If you're going about your day and quoting different things
+does everything happen too fast?
+what's the variation?
+how long between getting quotes and booking it?
+reminder, holding in memory
+
+//Feb 1//
+https://simplemaps.com/data/canada-cities 
+
+eventually it will be necessary to have an exhaustive list of american and canadian cities
+
+
+
+  
+
+
+
+

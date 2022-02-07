@@ -451,8 +451,237 @@ const style = {
   p: 4,
 };
 
-  function addDashes(f) {
-    f_val = f.value.replace(/\D[^\.]/g, "");
-    f.value =
-      f_val.slice(0, 3) + "-" + f_val.slice(3, 6) + "-" + f_val.slice(6);
+function addDashes(f) {
+  f_val = f.value.replace(/\D[^\.]/g, "");
+  f.value = f_val.slice(0, 3) + "-" + f_val.slice(3, 6) + "-" + f_val.slice(6);
+}
+
+///////////////////////////////////////////////////////////////////////
+//LOAD TABLE API
+///////////////////////////////////////////////////////////////////////
+
+app.post("/loads", async (req, res) => {
+  try {
+    const {
+      num_pallets,
+      pallet_dims_id,
+      commodity,
+      weight_lbs,
+      weight_kgs,
+      feet,
+      packaging_type,
+      equipment_type,
+      special_instructions,
+      pallets_same_dims,
+      is_palletized,
+      is_stackable,
+      is_haz_mat,
+      is_oversized,
+      is_fragile,
+      is_frozen,
+      is_perishable,
+      is_expedited,
+      is_inbond,
+      requires_tarp,
+      requires_team,
+      requires_ventilation,
+      requires_tailgate,
+      requires_blanket_wrap,
+      requires_chains,
+      requires_straps,
+      requires_temp_control,
+      requires_dunnage,
+    } = req.body;
+    console.log(req.body);
+    const newLoad = await pool.query(
+      "INSERT INTO loads (num_pallets, pallet_dims_id, commodity, weight_lbs, weight_kgs, feet, packaging_type, equipment_type, special_instructions, pallets_same_dims, is_palletized, is_stackable, is_haz_mat, is_oversized, is_fragile, is_frozen, is_perishable, is_expedited, is_inbond, requires_tarp, requires_team, requires_ventilation, requires_tailgate, requires_blanket_wrap, requires_chains, requires_straps, requires_temp_control, requires_dunnage) VALUES  ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28) RETURNING *",
+      [
+        num_pallets,
+        pallet_dims_id,
+        commodity,
+        weight_lbs,
+        weight_kgs,
+        feet,
+        packaging_type,
+        equipment_type,
+        special_instructions,
+        pallets_same_dims,
+        is_palletized,
+        is_stackable,
+        is_haz_mat,
+        is_oversized,
+        is_fragile,
+        is_frozen,
+        is_perishable,
+        is_expedited,
+        is_inbond,
+        requires_tarp,
+        requires_team,
+        requires_ventilation,
+        requires_tailgate,
+        requires_blanket_wrap,
+        requires_chains,
+        requires_straps,
+        requires_temp_control,
+        requires_dunnage,
+      ]
+    );
+    res.json(newLoad);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
   }
+});
+
+//Get a quote request
+
+//Get all quote requests
+
+app.get("/loads", async (req, res) => {
+  try {
+    const allLoads = await pool.query("SELECT * FROM loads "); //returns an array of objects
+    res.json(allLoads.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Get a quote request by id//
+
+app.get("/loads/:id", async (req, res) => {
+  try {
+    const { id } = req.params; //id is the parameter
+    console.log(req.params);
+    const load = await pool.query("SELECT * FROM loads WHERE id = $1", [id]); //query the database for the id
+    res.json(load.rows); //send the results to the front end
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Update a quote request
+
+app.put("/loads/:id", async (req, res) => {
+  try {
+    const { id } = req.params; //id is the parameter
+    const {
+      num_pallets,
+      pallet_dims_id,
+      commodity,
+      weight_lbs,
+      weight_kgs,
+      feet,
+      packaging_type,
+      equipment_type,
+      special_instructions,
+      pallets_same_dims,
+      is_palletized,
+      is_stackable,
+      is_haz_mat,
+      is_oversized,
+      is_fragile,
+      is_frozen,
+      is_perishable,
+      is_expedited,
+      is_inbond,
+      requires_tarp,
+      requires_team,
+      requires_ventilation,
+      requires_tailgate,
+      requires_blanket_wrap,
+      requires_chains,
+      requires_straps,
+      requires_temp_control,
+      requires_dunnage,
+    } = req.body; //body is the data that is being sent to the database
+    const updateLoad = await pool.query(
+      //query the database for the id
+      "UPDATE loads SET (num_pallets, pallet_dims_id, commodity, weight_lbs, weight_kgs, feet, packaging_type, equipment_type, special_instructions, pallets_same_dims, is_palletized, is_stackable, is_haz_mat, is_oversized, is_fragile, is_frozen, is_perishable, is_expedited, is_inbond, requires_tarp, requires_team, requires_ventilation, requires_tailgate, requires_blanket_wrap, requires_chains, requires_straps, requires_temp_control, requires_dunnage) = ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13$, 14$, 15$, 16$, 17$, 18$, 19$, 20$, 21$, 22$, 23$, 24$, 25$, 26$, 27$, 28$) WHERE id = $29",
+      [
+        num_pallets,
+        pallet_dims_id,
+        commodity,
+        weight_lbs,
+        weight_kgs,
+        feet,
+        packaging_type,
+        equipment_type,
+        special_instructions,
+        pallets_same_dims,
+        is_palletized,
+        is_stackable,
+        is_haz_mat,
+        is_oversized,
+        is_fragile,
+        is_frozen,
+        is_perishable,
+        is_expedited,
+        is_inbond,
+        requires_tarp,
+        requires_team,
+        requires_ventilation,
+        requires_tailgate,
+        requires_blanket_wrap,
+        requires_chains,
+        requires_straps,
+        reuires_temp_control,
+        requires_dunnage,
+      ]
+    );
+    res.json(updateLoad.rows); //send the results to the front end
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Delete a quote request
+
+app.delete("/loads/:id", async (req, res) => {
+  try {
+    const { id } = req.params; //id is the parameter
+    const deleteLoad = await pool.query(
+      //query the database for the id
+      "DELETE FROM loads WHERE id = $1", //$1 is the placeholder for the value in the query
+      [id] //the value in the query is the value in the array
+    );
+    res.json(deleteLoad.rows); //send the results to the front end
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.listen(5000, () => {
+  console.log("Server is running on port 5000");
+});
+
+   <DialogTitle>{JSON.stringify(editRowsModel)}</DialogTitle>
+        <DialogContent dividers style={{ height: "200px" }}>
+          <div style={{ display: "flex" }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              onEditRowModelChange={handleEditRowModelChange}
+              editRowsModel={editRowsModel}
+              autoHeight
+            />
+          </div>
+        </DialogContent>
+        <AddCustomerDialog
+          handleClickOpen={openAddNewCustomer}
+          handleClose={handleNewCustomerClose}
+          addNewCustomer={addNewCustomer}
+        />
+
+          async function getCustomerName(customer_id) {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/customers/${customer_id}`
+        );
+        const customer = await response.json();
+
+        console.log(customer);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getCustomerName(rawQuoteRequestData.customer_id);

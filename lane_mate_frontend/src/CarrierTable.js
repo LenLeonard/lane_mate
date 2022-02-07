@@ -37,12 +37,13 @@ export default function CarrierTable({
   return (
     <div>
       <div>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableContainer component={Paper} elevation={6}>
+          <Table aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Carrier Name</TableCell>
                 <TableCell align="right">Phone Number</TableCell>
+                <TableCell align="right">Extension</TableCell>
                 <TableCell align="right">Dispatch Email</TableCell>
                 <TableCell align="right">Contact Name</TableCell>
                 <TableCell align="right">Rate</TableCell>
@@ -57,6 +58,7 @@ export default function CarrierTable({
                 >
                   <TableCell align="left">{row.carrierName}</TableCell>
                   <TableCell align="right">{row.phoneNumber}</TableCell>
+                  <TableCell align="right">{row.extension}</TableCell>
                   <TableCell align="right">{row.dispatchEmail}</TableCell>
                   <TableCell align="right">{row.contactName}</TableCell>
                   <TableCell align="right">{row.rate}</TableCell>
