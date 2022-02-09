@@ -90,7 +90,7 @@ app.post("/users/login", async (req, res) => {
     );
     console.log(userTable.rows);
 
-    if (userTable.rows == null) {
+    if (userTable.rows.length === null) {
       return res.status(400).send("Cannot find user");
     }
 
