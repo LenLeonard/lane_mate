@@ -64,16 +64,9 @@ app.post("/users", async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    const user = {
-      email: req.body.email,
-      password: hashedPassword,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-    };
-
     const newUser = await pool.query(
       "INSERT INTO users (first_name, last_name, email, password ) VALUES ($1, $2, $3, $4) RETURNING *",
-      [user.firstName, user.lastName, user.email, user.password]
+      [req.body.firstName, req.body.lastName, req.body.email, hashedPassword]
     );
     res.json(newUser);
 
@@ -100,19 +93,11 @@ app.post("/users/login", async (req, res) => {
     if (userTable.rows == null) {
       return res.status(400).send("Cannot find user");
     }
-    //parsing user row into an object
-    const user = {
-      email: userTable.rows[0].email,
-      password: userTable.rows[0].password,
-      firstName: userTable.rows[0].first_name,
-      lastName: userTable.rows[0].last_name,
-      id: userTable.rows[0].id,
-    };
 
     //invoke bcrypt to compare password
-    if (await bcrypt.compare(req.body.password, user.password)) {
+    if (await bcrypt.compare(req.body.password, userTable.rows[0].password)) {
       //if password is correct, generate an access token and refresh token using the user email
-      const userEmail = { email: user.email };
+      const userEmail = { email: userTable.rows[0].email };
       const accessToken = generateAccessToken(userEmail);
       const refreshToken = generateRefreshToken(userEmail);
 
@@ -123,9 +108,10 @@ app.post("/users/login", async (req, res) => {
       res.json({
         accessToken: accessToken,
         refreshToken: refreshToken,
-        userName: user.firstName + " " + user.lastName,
+        userName:
+          userTable.rows[0].first_name + " " + userTable.rows[0].last_name,
         userEmail: user.email,
-        userId: user.id,
+        userId: userTable.rows[0].id,
       });
       refreshTokens.push(refreshToken);
     } else {
