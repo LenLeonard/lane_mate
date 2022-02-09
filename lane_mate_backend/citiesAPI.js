@@ -1,3 +1,5 @@
+const pool = require("./db");
+
 module.exports = function (app, db) {
   app.get("/cities", async (req, res) => {
     try {

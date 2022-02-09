@@ -1,5 +1,5 @@
 ////offer ENDPOINTS
-
+const pool = require("./db");
 module.exports = function (app, db) {
   app.post("/offers", async (req, res) => {
     try {

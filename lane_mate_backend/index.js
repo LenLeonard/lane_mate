@@ -17,11 +17,11 @@ const carriersAPI = require("./carriersAPI");
 app.use(cors());
 app.use(express.json());
 
-offersAPI(app, pool);
-citiesAPI(app, pool);
-lane_stopsAPI(app, pool);
-customersAPI(app, pool);
-carriersAPI(app, pool);
+offersAPI(app);
+citiesAPI(app);
+lane_stopsAPI(app);
+customersAPI(app);
+carriersAPI(app);
 
 //Authentice Token Function
 
@@ -37,7 +37,6 @@ function authenticateToken(req, res, next) {
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403); // send status 403
     req.user = user; // user is returned from jwt.verify, from the access token payload
-    console.log(req.user);
 
     next(); // call next middleware
   });
@@ -79,8 +78,6 @@ app.post("/users", async (req, res) => {
 
 //login logic, returns access token and refresh token to client
 app.post("/users/login", async (req, res) => {
-  console.log(req.body);
-
   try {
     //if user is in the database
     const userTable = await pool.query(
@@ -88,7 +85,6 @@ app.post("/users/login", async (req, res) => {
       "SELECT * FROM users WHERE email = $1",
       [req.body.email]
     );
-    console.log(userTable.rows);
 
     if (userTable.rows.length === null) {
       return res.status(400).send("Cannot find user");
@@ -97,6 +93,7 @@ app.post("/users/login", async (req, res) => {
     //invoke bcrypt to compare password
     if (await bcrypt.compare(req.body.password, userTable.rows[0].password)) {
       //if password is correct, generate an access token and refresh token using the user email
+
       const userEmail = { email: userTable.rows[0].email };
       const accessToken = generateAccessToken(userEmail);
       const refreshToken = generateRefreshToken(userEmail);
@@ -110,7 +107,7 @@ app.post("/users/login", async (req, res) => {
         refreshToken: refreshToken,
         userName:
           userTable.rows[0].first_name + " " + userTable.rows[0].last_name,
-        userEmail: user.email,
+        userEmail: userTable.rows[0].email,
         userId: userTable.rows[0].id,
       });
       refreshTokens.push(refreshToken);
