@@ -5,15 +5,12 @@ module.exports = function (app, db) {
 
   app.post("/lane_stops", async (req, res) => {
     try {
-      const { city_id, is_origin, quote_request_id } = req.body;
-      console.log(req.body);
+      const { city_id, is_origin, lane_stop_id } = req.body;
 
       const lane_stop = await pool.query(
-        "INSERT INTO lane_stops (city_id, is_origin, quote_request_id) VALUES ($1, $2, $3) RETURNING *",
-        [city_id, is_origin, quote_request_id]
+        "INSERT INTO lane_stops (city_id, is_origin, lane_stop_id) VALUES ($1, $2, $3) RETURNING *",
+        [city_id, is_origin, lane_stop_id]
       );
-
-      console.log(lane_stop);
     } catch (err) {
       console.error(err.message);
     }
@@ -32,15 +29,15 @@ module.exports = function (app, db) {
     }
   });
 
-  //Access a lane_stop by quote_request_id
+  //Access a lane_stop by lane_stop_id
 
-  app.post("/lane_stops/:quote_request_id", async (req, res) => {
+  app.post("/lane_stops/:lane_stop_id", async (req, res) => {
     try {
-      const { quote_request_id } = req.params; //id is the parameter
-      console.log(req.params);
+      const { lane_stop_id } = req.params; //id is the parameter
+
       const lane_stop = await pool.query(
-        "SELECT * FROM lane_stops WHERE quote_request_id = $1",
-        [quote_request_id]
+        "SELECT * FROM lane_stops WHERE lane_stop_id = $1",
+        [lane_stop_id]
       ); //query the database for the id
       res.json(lane_stop.rows); //send the results to the front end
       console.log(lane_stop.rows);

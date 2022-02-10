@@ -133,11 +133,9 @@ export default function Dashboard() {
   }
 
   //This function is used in the case where the user has entered a quote request and the corresponding carrier information,
-  //but does not want to create anothe quote request. It allows the current quote request (state of the Dashboard) to be searched and downloaded
+  //but does not want to create another quote request. It allows the current quote request (state of the Dashboard) to be searched and downloaded
   //by adding it to the dashboardObjectArray.
   const handleSaveQuoteRequest = () => {
-    console.log(tableData);
-
     async function addCarrierToDatabase(carrier) {
       try {
         const response = await fetch("http://localhost:5000/carriers", {
@@ -163,37 +161,15 @@ export default function Dashboard() {
       }
     }
 
-    async function getCarrierIDByNameFromDatabase(carrierName) {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/carriers?carrier_name=${carrierName}`
-        );
-        const jsonData = await response.json(); //convert the response to json
-        console.log(jsonData);
-        return jsonData[0].id;
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
     tableData.forEach((offer) => {
-      if (carriers.includes(offer.carrierName)) {
-        let carrier_id = carriers.find(
-          (carrier) => carrier.carrier_name === offer.carrierName
-        ).id;
-      } else {
-        let carrier = {
-          carrier_name: offer.carrierName,
-          phone: offer.phone,
-          contact_email: offer.email,
-          contact_name: offer.contactName,
-          contact_ext: offer.extension,
-        };
-        addCarrierToDatabase(carrier);
-        const carrier_id = getCarrierIDByNameFromDatabase(offer.carrierName);
-        console.log(offer.carrierName);
-        console.log(carrier_id);
-      }
+      const carrier = {
+        carrier_name: offer.carrierName,
+        phone_number: offer.phoneNumber,
+        contact_ext: offer.extension,
+        contact_email: offer.dispatchEmail,
+        contact_name: offer.contactName,
+      };
+      addCarrierToDatabase(carrier);
     });
 
     if (dashBoardObjectArray.length === 0 && quoteObject.quoteNumber === "") {

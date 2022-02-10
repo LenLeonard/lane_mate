@@ -5,11 +5,11 @@ module.exports = function (app, db) {
     try {
       const { carrier_name, phone, contact_ext, contact_email, contact_name } =
         req.body;
-      console.log(req.body);
       const newCarrier = await pool.query(
-        "INSERT INTO carriers (carrier_name, phone, contact_ext, contact_email, contact_name) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+        "INSERT INTO carriers (carrier_name, phone, contact_ext, contact_email, contact_name) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (carrier_name) DO UPDATE SET carrier_name = $1, phone = $2, contact_ext = $3, contact_email = $4, contact_name = $5 RETURNING *",
         [carrier_name, phone, contact_ext, contact_email, contact_name]
       );
+
       res.json(newCarrier);
     } catch (err) {
       console.error(err.message);
@@ -32,10 +32,26 @@ module.exports = function (app, db) {
   app.get("/carriers/:id", async (req, res) => {
     try {
       const { id } = req.params; //id is the parameter
-      console.log(req.params);
+
       const carrier = await pool.query("SELECT * FROM carriers WHERE id = $1", [
         id,
       ]); //query the database for the id
+      res.json(carrier.rows); //send the results to the front end
+    } catch (err) {
+      console.error(err.message);
+    }
+  });
+
+  //Get a carrier by name//
+
+  app.get("/carriers/:carrier_name", async (req, res) => {
+    try {
+      const { carrier_name } = req.params; //id is the parameter
+
+      const carrier = await pool.query(
+        "SELECT * FROM carriers WHERE carrier_name = $1",
+        [carrier_name]
+      ); //query the database for the id
       res.json(carrier.rows); //send the results to the front end
     } catch (err) {
       console.error(err.message);

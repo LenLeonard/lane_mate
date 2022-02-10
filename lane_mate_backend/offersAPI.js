@@ -4,14 +4,11 @@ module.exports = function (app, db) {
   app.post("/offers", async (req, res) => {
     try {
       const { quote_request_id, carrier_id, rate, notes } = req.body;
-      console.log(req.body);
 
       const offer = await pool.query(
         "INSERT INTO offers (quote_request_id, carrier_id, rate, notes) VALUES ($1, $2, $3, $4) RETURNING *",
         [quote_request_id, carrier_id, rate, notes]
       );
-
-      console.log(offer);
     } catch (err) {
       console.error(err.message);
     }
@@ -33,13 +30,12 @@ module.exports = function (app, db) {
   app.post("/offers/:quote_request_id", async (req, res) => {
     try {
       const { quote_request_id } = req.params; //id is the parameter
-      console.log(req.params);
+
       const offer = await pool.query(
         "SELECT * FROM offers WHERE quote_request_id = $1",
         [quote_request_id]
       ); //query the database for the id
       res.json(offer.rows); //send the results to the front end
-      console.log(offer.rows);
     } catch (err) {
       console.error(err.message);
     }
