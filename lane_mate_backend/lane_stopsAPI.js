@@ -5,14 +5,14 @@ module.exports = function (app, db) {
 
   app.post("/lane_stops", async (req, res) => {
     try {
-      const { city_id, is_origin, lane_stop_id } = req.body;
+      const { city_id, is_origin, quote_request_id } = req.body;
 
       const lane_stop = await pool.query(
-        "INSERT INTO lane_stops (city_id, is_origin, lane_stop_id) VALUES ($1, $2, $3) RETURNING *",
-        [city_id, is_origin, lane_stop_id]
+        "INSERT INTO lane_stops (city_id, is_origin, quote_request_id) VALUES ($1, $2, $3) RETURNING *",
+        [city_id, is_origin, quote_request_id]
       );
     } catch (err) {
-      console.error(err.message);
+      console.error("lane_stop post" + err.message);
     }
   });
 
@@ -25,7 +25,7 @@ module.exports = function (app, db) {
       const allLane_stops = await pool.query("SELECT * FROM lane_stops "); //returns an array of objects
       res.json(allLane_stops.rows);
     } catch (err) {
-      console.error(err.message);
+      console.error("lane_stop get" + err.message);
     }
   });
 
@@ -36,7 +36,7 @@ module.exports = function (app, db) {
       const { lane_stop_id } = req.params; //id is the parameter
 
       const lane_stop = await pool.query(
-        "SELECT * FROM lane_stops WHERE lane_stop_id = $1",
+        "SELECT * FROM lane_stops WHERE id = $1",
         [lane_stop_id]
       ); //query the database for the id
       res.json(lane_stop.rows); //send the results to the front end

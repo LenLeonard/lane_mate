@@ -169,6 +169,208 @@ https://simplemaps.com/data/canada-cities
 
 eventually it will be necessary to have an exhaustive list of american and canadian cities
 
+Feb 2
+
+//Allow 3 different users to sign up, sign in, and create
+carriers and customers
+For the purposes of this demo,
+carriers can be shared across the 2 users,
+but customers have to be unique to each user//
+
+This will involve having a user_id on both the customer and carrier tables
+
+//Authentication//
+If user does not have an account
+-submit valid name and email
+-form makes a call to /users endpoint
+-at users endpoint, POST to users db
+-let the user in, and cache accesstoken and userID in local storage
+-the user can only access the database if the token is authorized,
+and the user id matches the one in the customer row
+
+If user does have an account
+-Form submitted does a get request to the users endpoint
+-queries the table to see if user is in the table
+if not, something wrong with credentials
+if yes, cache user info in local storage (for now)
+
+once this is figured out, just wire it it up to the existing version.
+
+//
+
+Flow for create a quote request.
+
+user logs in
+(handled above)
+user clicks create quote request
+new empty quote request object instantiated
+with sales rep number
+const quote request = {
+sales_rep_ID:1,
+customerID: 0,
+lane = {
+	id: 0
+	lane_stops:[]
+}
+equipment_type: 0
+handling_units: []
+
+}
+
+i) prompted with a modal to select a customer -> GET request to customer table
+if none, create a customer, another modal form -> post request to customers table
+customer info is passed to quote request object
+
+ii) 
+lane object instantated
+lane = {
+id = GET next id from the table, (current id + 1)
+lane_stops: [lane_stopID, lane_stopID, lane_stopID]
+}
+prompted with enter origin and destination modal
+(should there be a province/state table too?)
+for each, a search bar, drawing on the list of canadian cities
+enter city, province
+->POST to city table, WHERE includes, or something, called at every onchange event
+populate the drop down with results: MUI autocomplete will do this
+then when you click on it, the city id is added to lane_stops table, along with the lane_id
+this lane_stop is added to the lane_stop array on the lane object
+follow same process for the destination
+this on submit, the lane is passed to the quote request object
+(this is where transcations could come in?)
+if the user cancels at this point, go back and undo all of the lane info
+(perhaps waiting
+
+iv)add equipment type, perhaps from drop down
+iv)
+handling_unit array instantiated
+prompted with dialog to add
+number, handling_type, weight in lbs/kgs, length, width, height (link to special attributes modal)
+onSubmit, add to the handling_unit table, and pass the id to the handling_units array
+after all are submitted, pass the handling_units array to the quote request object
+
+V) format all of the data from the quote request object into a formatted quote request card and display it
+
+Vi)show the carrier entry form and carrier table
+
+Vii)when entering a carrier, it checks whether it is in the db, if not adds it and adds this to the offer object, which is added to the offers table,
+which is actually displayed beneath the Quote request card. each of these offers has an ID associated with the quote request
+
+when searching, we only need to return the carriers associated with this quote request
+
+1)
+sign up users to db
+once signed up assign token and reroute to home.
+
+
+
+Validate sign in form//
+when invalid request sent, display incorrect password error|
+if email is already in database, return wrong password error|
+
+now, only show dashboard if access token is validated|
+
+get add customer portion to quote request figured out
+- search bar in dialog, autocomplete, and add button
+click customers and have different ones show up based on user_id
+
+
+//Feb 4//
+
+4. start in on quote request sequence above:
+
+have separate dialogs for each part of the data entry
+with next and back buttons on the bottom
+
+1. Customer
+2.Origin and Destination
+3. Equipment type and Handling Units
+
+
+thats kinda wired together now, so move onto
+
+1. storing quote requests in the data base
+-make endpoint
+-format data
+-make table to search like carriers and customers
+to make sure you have post and get
+
+there will be a dbQuoteRequest object and a formatted displayQuoteRequestObject
+
+creating the lane stops table:
+when city is submitted, a lane_stop object is created and posted to the lane_stop table for every origin and destination, each with the same lane_id
+this lane_id is passed to the quote_request_dialog to be bundled with the other info tha will make up the quoteRequestObject that will be 
+posted to the quote_requests_table
+
+quoteRequestDBObject{
+id:1,
+sales_rep_id = localstorage.getItem("userID"),
+customer_id = customer_id,
+}
+
+it's really that simple.
+
+(for the table of quote requests, allow the user to click a row and bring up another table of all the offers)
+
+there's no dashboard object any more, we will just render the offer rows that corresponds to 
+the quoteRequestId that is displayed. getting the quote request table together would make this easier
+it will be a join
+to display the table of quote request rows.
+perform a series of queries that will give a table you can display and then map this to a table
+when clicking each one, the corresponding offers appear.
+
+perhaps start with figuring out the queries?
+
+only need lane_stop entries;
+make them at the quote request component level
+need an object like this:
+const lane_stop = {
+city_id: 12312313,
+is_origin: true
+}
+
+we need to get add the quote request number when it is generated at the top level,
+so pass up an array of lane_stops
+lane_stops = [{
+city_id: 12121212,
+is_origin: false,
+},
+city_id: 2345235,
+is_origin: true,
+}
+
+These are made in lane quote dialog
+go back and fix it later so lane quote dialog returns lane_stops as an array of objects
+
+now it's time to make the offer table
+
+right now i'm handling the logic of dealing with carriers and offers
+then onto handling units
+and then i should be persisting them
+at which point i'll turn to search
+upsert and returning columns, id name, etc
+
+side bar, nav to different kinds of data, each views of tables
+check out notion,upsert
+
+eventually be able to go through the list of carriers, call them and add their quote to the list. the is about helping brokers cover loads
+
+//FEB 9//
+-on create quote request: 
+create quote request with sales_rep_id and customerid and add it to the db
+create all the lane_stops entries and add them to the table with a reference to the quote_request id
+on save quote request, add all the offers (perhaps this should happen every time you add a carrier)
+
+
+
+
+
+
+
+
+
+ 
+
 
 
   

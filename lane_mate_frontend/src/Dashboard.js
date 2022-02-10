@@ -77,6 +77,10 @@ export default function Dashboard() {
 
   // QUOTE OBJECT DEFINITION AND FORMAT HANDLING //
 
+  //set current quote number
+
+  const [quoteRequestId, setQuoteRequestId] = useState(0);
+
   //quoteObject is being used to handle the data from the Quote Request Dialog pop up and pass it to the QuoteCard component;
   //the initial state is an empty quoteObject.
 
@@ -325,6 +329,75 @@ export default function Dashboard() {
       handleSaveQuoteRequest();
     }
 
+    //create a new quote request object and add to db, return the new quote request id
+    const newQuoteRequest = {
+      sales_rep_id: localStorage.getItem("userId"),
+      customer_id: event.customerId,
+    };
+
+    async function createNewQuoteRequest() {
+      console.log("creating new quote request");
+      try {
+        const response = await fetch("http://localhost:5000/quote_requests", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newQuoteRequest),
+        });
+        const data = await response.json();
+        console.log(data);
+        console.log(data[0].id);
+        setQuoteRequestId(data[0].id);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    function addLaneStopsToDataBase(quote_request_id) {
+      console.log(quote_request_id);
+      let lane_stops = [];
+      event.originCities.forEach((city) => {
+        lane_stops.push({
+          quote_request_id: quote_request_id,
+          city_id: city.city_id,
+          is_origin: city.is_origin,
+        });
+        console.log(lane_stops);
+      });
+
+      event.destinationCities.forEach((city) => {
+        lane_stops.push({
+          quote_request_id: quote_request_id,
+          city_id: city.city_id,
+          is_origin: city.is_origin,
+        });
+      });
+
+      lane_stops.forEach((lane_stop) => {
+        commitLaneStops(lane_stop);
+        lane_stops = [];
+      });
+    }
+
+    async function commitLaneStops(lane_stops) {
+      try {
+        const response = await fetch("http://localhost:5000/lane_stops", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(lane_stops),
+        });
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    createNewQuoteRequest();
+    addLaneStopsToDataBase(quoteRequestId);
+
     //this increments the quoteNumber state so that the next quote request will have a unique quote number
     setQuoteNumber(quoteNumber + 1);
 
@@ -341,46 +414,6 @@ export default function Dashboard() {
       dimensions: JSON.stringify(event.dimensions),
       numberOfFeet: event.linearFeet,
     };
-
-    //commit lane_stops info to the database
-
-    let laneStops = [];
-    event.originCities.forEach((city) => {
-      laneStops.push({
-        quote_request_id: quoteNumber,
-        city_id: city.city_id,
-        is_origin: city.is_origin,
-      });
-    });
-
-    event.destinationCities.forEach((city) => {
-      laneStops.push({
-        quote_request_id: quoteNumber,
-        city_id: city.city_id,
-        is_origin: city.is_origin,
-      });
-    });
-
-    async function commitLaneStops(lane_stop) {
-      try {
-        const response = await fetch("http://localhost:5000/lane_stops", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(lane_stop),
-        });
-        const data = await response.json();
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    laneStops.forEach((lane_stop) => {
-      commitLaneStops(lane_stop);
-      laneStops = [];
-    });
 
     //this sets the quoteObject state to the newQuoteObject and so re-renders the quote card component with the updated quoteObject
     setQuoteObject(newQuoteObject);

@@ -96,7 +96,6 @@ export default function QuoteRequestDialog({
   }
 
   function formatQuoteRequest(rawQuoteRequestData, cities) {
-    console.log(rawQuoteRequestData);
     const NUM_QUOTE_REQUEST_FIELDS = 5;
     const NUMBER_OF_DISTICT_HANDLING_UNITS =
       Object.keys(rawQuoteRequestData).length - NUM_QUOTE_REQUEST_FIELDS;
@@ -152,11 +151,6 @@ export default function QuoteRequestDialog({
       return linearFeet;
     };
 
-    console.log(rawQuoteRequestData.customerId);
-    console.log(rawQuoteRequestData.customerCompanyName);
-
-    console.log(rawQuoteRequestData.equipmentData[0].equipment_type);
-
     const numPallets = parseInt(rawQuoteRequestData.loadData[0].quantity);
     const weightPerPallet = parseInt(rawQuoteRequestData.loadData[0].weight);
     const palletLength = parseInt(rawQuoteRequestData.loadData[0].length);
@@ -181,7 +175,6 @@ export default function QuoteRequestDialog({
       totalPalletWeight: totalPalletWeight,
       linearFeet: linearFeet,
     };
-    console.log(formattedQuoteRequest);
 
     //make entry in lane_stop and lanes table
 
