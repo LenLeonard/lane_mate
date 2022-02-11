@@ -357,8 +357,12 @@ eventually be able to go through the list of carriers, call them and add their q
 
 //FEB 9//
 -on create quote request: 
-create quote request with sales_rep_id and customerid and add it to the db
-create all the lane_stops entries and add them to the table with a reference to the quote_request id
+create quote request with sales_rep_id and customerid and add it to the db | done
+create all the lane_stops entries and add them to the table with a reference to the quote_request id | done
+add all the handling units to the database as Well
+-feb 10 task: when you click submit, send the object to the backend
+
+
 on save quote request, add all the offers (perhaps this should happen every time you add a carrier)
 
 

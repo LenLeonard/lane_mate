@@ -13,6 +13,7 @@ const lane_stopsAPI = require("./lane_stopsAPI");
 const customersAPI = require("./customersAPI");
 const carriersAPI = require("./carriersAPI");
 const quoteRequestsAPI = require("./quoteRequestsAPI");
+const handling_unitsAPI = require("./handling_unitsAPI");
 
 //middleware
 app.use(cors());
@@ -24,6 +25,7 @@ lane_stopsAPI(app);
 customersAPI(app);
 carriersAPI(app);
 quoteRequestsAPI(app);
+handling_unitsAPI(app);
 
 //Authentice Token Function
 
