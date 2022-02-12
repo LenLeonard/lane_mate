@@ -330,6 +330,7 @@ export default function Dashboard() {
     }
 
     //create a new quote request object and add to db, return the new quote request id
+
     const newQuoteRequest = {
       sales_rep_id: localStorage.getItem("userId"),
       customer_id: event.customerId,
@@ -346,8 +347,6 @@ export default function Dashboard() {
           body: JSON.stringify(newQuoteRequest),
         });
         const data = await response.json();
-        console.log(data);
-        console.log(data[0].id);
         setQuoteRequestId(data[0].id);
       } catch (error) {
         console.log(error);
@@ -357,16 +356,15 @@ export default function Dashboard() {
     function addLaneStopsToDataBase(quote_request_id) {
       console.log(quote_request_id);
       let lane_stops = [];
-      event.originCities.forEach((city) => {
+      event.origins.forEach((city) => {
         lane_stops.push({
           quote_request_id: quote_request_id,
           city_id: city.city_id,
           is_origin: city.is_origin,
         });
-        console.log(lane_stops);
       });
 
-      event.destinationCities.forEach((city) => {
+      event.destinations.forEach((city) => {
         lane_stops.push({
           quote_request_id: quote_request_id,
           city_id: city.city_id,
@@ -380,14 +378,14 @@ export default function Dashboard() {
       });
     }
 
-    async function commitLaneStops(lane_stops) {
+    async function commitLaneStops(lane_stop) {
       try {
         const response = await fetch("http://localhost:5000/lane_stops", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(lane_stops),
+          body: JSON.stringify(lane_stop),
         });
         const data = await response.json();
         console.log(data);
@@ -395,24 +393,59 @@ export default function Dashboard() {
         console.log(error);
       }
     }
+
+    function addHandlingUnitsToDataBase(quote_request_id) {
+      console.log(quote_request_id);
+      let handling_units = [];
+
+      for (let i = 0; i < Object.keys(event.loadData).length; i++) {
+        handling_units.push({
+          quote_request_id: quote_request_id,
+          type: event.loadData[i].type,
+          weight_lbs: event.loadData[i].weight_lbs,
+          length_inches: event.loadData[i].length_inches,
+          width_inches: event.loadData[i].width_inches,
+          height_inches: event.loadData[i].height_inches,
+          quantity: event.loadData[i].quantity,
+        });
+      }
+
+      handling_units.forEach((handling_unit) => {
+        commitHandlingUnits(handling_unit);
+        handling_units = [];
+      });
+    }
+
+    async function commitHandlingUnits(handling_unit) {
+      console.log(handling_unit);
+      try {
+        const response = await fetch("http://localhost:5000/handling_units", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(handling_unit),
+        });
+
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     createNewQuoteRequest();
     addLaneStopsToDataBase(quoteRequestId);
+    addHandlingUnitsToDataBase(quoteRequestId);
 
     //this increments the quoteNumber state so that the next quote request will have a unique quote number
     setQuoteNumber(quoteNumber + 1);
 
     //this takes the user input from the dialog form and defines the object that will be passed to the QuoteCard component
     let newQuoteObject = {
-      quoteNumber: quoteNumber,
+      quoteNumber: quoteRequestId,
       quoteDate: new Date().toDateString(),
       customerName: event.customerCompanyName,
-      origin: event.originCities[0].city_id,
-      destination: event.destinationCities[0].city_id,
-      equipmentType: event.equipmentType,
-      weight: event.totalPalletWeight,
-      numberOfPallets: event.numPallets,
-      dimensions: JSON.stringify(event.dimensions),
-      numberOfFeet: event.linearFeet,
     };
 
     //this sets the quoteObject state to the newQuoteObject and so re-renders the quote card component with the updated quoteObject

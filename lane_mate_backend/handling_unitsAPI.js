@@ -10,13 +10,24 @@ module.exports = function (app, db) {
         type,
         weight_lbs,
         length_inches,
+        width_inches,
         height_inches,
+        quantity,
       } = req.body;
 
       const handling_unit = await pool.query(
-        "INSERT INTO handling_units (quote_request_id, type, weight_lbs, length_inches, height_inches) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-        [quote_request_id, type, weight_lbs, length_inches, height_inches]
+        "INSERT INTO handling_units (quote_request_id, type, weight_lbs, length_inches, width_inches, height_inches, quantity) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+        [
+          quote_request_id,
+          type,
+          weight_lbs,
+          length_inches,
+          width_inches,
+          height_inches,
+          quantity,
+        ]
       );
+      console.log(req.body);
     } catch (err) {
       console.error("handling_unit post" + err.message);
     }

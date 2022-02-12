@@ -122,7 +122,7 @@ export default function HandlingUnitInput({ getEquipmentData }) {
                 <TextField
                   id="outlined-basic1"
                   label="Special Attributes"
-                  name="specialAttributes"
+                  name="special_attributes"
                   variant="outlined"
                   onChange={(e) => handleInputChange(e, i)}
                 />

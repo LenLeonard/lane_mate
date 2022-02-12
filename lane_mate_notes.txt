@@ -361,6 +361,8 @@ create quote request with sales_rep_id and customerid and add it to the db | don
 create all the lane_stops entries and add them to the table with a reference to the quote_request id | done
 add all the handling units to the database as Well
 -feb 10 task: when you click submit, send the object to the backend
+-first make handling_unitAPI
+-everytime a quote requested is submitted, send an array of objects representing distinct handling units to the endpoint
 
 
 on save quote request, add all the offers (perhaps this should happen every time you add a carrier)

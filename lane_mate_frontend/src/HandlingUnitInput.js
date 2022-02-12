@@ -40,12 +40,12 @@ export default function HandlingUnitInput({ getLoadData }) {
   const classes = useStyles();
   const [multiInput, setMultiInput] = useState([
     {
-      handling_unit_type: "",
+      type: "",
+      weight_lbs: "",
+      length_inches: "",
+      width_inches: "",
+      height_inches: "",
       quantity: "",
-      length: "",
-      width: "",
-      height: "",
-      weight: "",
     },
   ]);
 
@@ -74,12 +74,12 @@ export default function HandlingUnitInput({ getLoadData }) {
     setMultiInput([
       ...multiInput,
       {
-        handling_unit_type: "",
+        type: "",
+        weight_lbs: "",
+        length_inches: "",
+        width_inches: "",
+        height_inches: "",
         quantity: "",
-        length: "",
-        width: "",
-        height: "",
-        weight: "",
       },
     ]);
     console.log(multiInput);
@@ -111,7 +111,7 @@ export default function HandlingUnitInput({ getLoadData }) {
                   )}
                   onChange={(e, value) => {
                     const inputList = [...multiInput];
-                    inputList[i].handling_unit_type = value;
+                    inputList[i].type = value;
                     setMultiInput(inputList);
                   }}
                   renderInput={(params) => (
@@ -119,7 +119,7 @@ export default function HandlingUnitInput({ getLoadData }) {
                       {...params}
                       id="outlined-basic"
                       label="Handling Unit"
-                      name="handlingUnit"
+                      name="type"
                       variant="outlined"
                       InputProps={{
                         ...params.InputProps,
@@ -139,28 +139,28 @@ export default function HandlingUnitInput({ getLoadData }) {
                   id="outlined-basic2"
                   label="Length"
                   variant="outlined"
-                  name="length"
+                  name="length_inches"
                   onChange={(e) => handleInputChange(e, i)}
                 />
                 <TextField
                   id="outlined-basic2"
                   label="Width"
                   variant="outlined"
-                  name="width"
+                  name="width_inches"
                   onChange={(e) => handleInputChange(e, i)}
                 />
                 <TextField
                   id="outlined-basic2"
                   label="Height"
                   variant="outlined"
-                  name="height"
+                  name="height_inches"
                   onChange={(e) => handleInputChange(e, i)}
                 />
                 <TextField
                   id="outlined-basic2"
                   label="Weight"
                   variant="outlined"
-                  name="weight"
+                  name="weight_lbs"
                   onChange={(e) => handleInputChange(e, i)}
                 />
 
