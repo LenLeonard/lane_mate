@@ -52,9 +52,9 @@ export default function HandlingUnitInput({ getLoadData }) {
   // handle input change
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
-    console.log(name);
-    console.log(value);
+
     const inputList = [...multiInput];
+    console.log(inputList);
     inputList[index][name] = value;
     setMultiInput(inputList);
     getLoadData(multiInput);

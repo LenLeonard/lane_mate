@@ -442,14 +442,50 @@ export default function Dashboard() {
     setQuoteNumber(quoteNumber + 1);
 
     //this takes the user input from the dialog form and defines the object that will be passed to the QuoteCard component
+
+    const NUMBER_OF_HANDLING_UNIT_TYPES = Object.keys(event.loadData).length;
+    console.log(NUMBER_OF_HANDLING_UNIT_TYPES);
+    let totalWeight = 0;
+
+    for (let i = 0; i < NUMBER_OF_HANDLING_UNIT_TYPES; i++) {
+      let weightPerUnit = event.loadData[i].weight_lbs;
+      console.log(weightPerUnit);
+      let numberOfUnits = event.loadData[i].quantity;
+      console.log(numberOfUnits);
+      totalWeight += weightPerUnit * numberOfUnits;
+    }
+
+    let dimensions = [];
+    for (let i = 0; i < NUMBER_OF_HANDLING_UNIT_TYPES; i++) {
+      dimensions.push({
+        length: event.loadData[i].length_inches,
+        width: event.loadData[i].width_inches,
+        height: event.loadData[i].height_inches,
+      });
+    }
+
+    let distinctHandlingUnits = [];
+    for (let i = 0; i < NUMBER_OF_HANDLING_UNIT_TYPES; i++) {
+      distinctHandlingUnits.push({
+        type: event.loadData[i].type,
+      });
+    }
+
     let newQuoteObject = {
       quoteNumber: quoteRequestId,
       quoteDate: new Date().toDateString(),
       customerName: event.customerCompanyName,
+      destination: event.destinations[0].city_id,
+      origin: event.origins[0].city_id,
+      equipmentType: event.equipmentData[0].type,
+      weight: totalWeight,
+      handling_units: distinctHandlingUnits,
+      dimensions: dimensions,
     };
 
     //this sets the quoteObject state to the newQuoteObject and so re-renders the quote card component with the updated quoteObject
     setQuoteObject(newQuoteObject);
+    console.log(newQuoteObject);
 
     //this sets the quoteRequestDefined state to true so that the carriertable component will render
     setQuoteRequestDefined(true);

@@ -44,7 +44,7 @@ export default function LoadQuoteDialog({
   }
 
   useEffect(() => {
-    getFormData({ loadData: loadData, equipmentData: equipmentData });
+    getFormData({ loadData, equipmentData });
   }, [loadData, equipmentData]);
 
   return (
