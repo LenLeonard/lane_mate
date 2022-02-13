@@ -6,11 +6,26 @@ module.exports = function (app, db) {
       const { carrier_name, phone, contact_ext, contact_email, contact_name } =
         req.body;
       const newCarrier = await pool.query(
+        "INSERT INTO carriers (carrier_name, phone, contact_ext, contact_email, contact_name) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+        [carrier_name, phone, contact_ext, contact_email, contact_name]
+      );
+
+      res.json(newCarrier.rows[0]);
+    } catch (err) {
+      console.error(err.message);
+    }
+  });
+
+  app.put("/carriers", async (req, res) => {
+    try {
+      const { carrier_name, phone, contact_ext, contact_email, contact_name } =
+        req.body;
+      const newCarrier = await pool.query(
         "INSERT INTO carriers (carrier_name, phone, contact_ext, contact_email, contact_name) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (carrier_name) DO UPDATE SET carrier_name = $1, phone = $2, contact_ext = $3, contact_email = $4, contact_name = $5 RETURNING *",
         [carrier_name, phone, contact_ext, contact_email, contact_name]
       );
 
-      res.json(newCarrier);
+      res.json(newCarrier.rows[0]);
     } catch (err) {
       console.error(err.message);
     }

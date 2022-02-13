@@ -14,15 +14,17 @@ export default function DestinationCitySelectTEST({
   const onCityChange = (event, values) => {
     setInputValue(`${values.name}, ${values.state_province_name}`);
     const destination_city_id = values.id;
-    console.log(values);
+
     const inputList = [...destinationIDs];
     inputList[index].city_id = destination_city_id;
     inputList[index].is_origin = false;
+    inputList[index].city_name = values.name;
+    inputList[index].state_province_name = values.state_province_name;
+    inputList[index].state_province_id = values.state_province_id;
     setDestinationIDs(inputList);
     setLaneStops({
       destinations: destinationIDs,
     });
-    console.log(destinationIDs);
   };
 
   const [inputValue, setInputValue] = React.useState("");

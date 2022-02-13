@@ -367,6 +367,18 @@ add all the handling units to the database as Well
 
 on save quote request, add all the offers (perhaps this should happen every time you add a carrier)
 
+Feb 12//
+as of now, submitting a quote request adds a quote request, lane_stops, load info and equipment type to the db
+
+main task is to format and display this data on the main dashboard card
+-it is working for only one origin, destination, and handling type. 
+-need to work through how these will be displayed in all the different circumstances
+
+Feb 13//
+now when submitting a carrier through the carrier form, an offer object is posted to its endpoint
+
+next task: enable search functionality
+
 
 
 

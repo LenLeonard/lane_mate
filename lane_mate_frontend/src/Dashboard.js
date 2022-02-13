@@ -464,6 +464,13 @@ export default function Dashboard() {
       });
     }
 
+    let quantities = [];
+    for (let i = 0; i < NUMBER_OF_HANDLING_UNIT_TYPES; i++) {
+      quantities.push({
+        quantity: event.loadData[i].quantity,
+      });
+    }
+
     let distinctHandlingUnits = [];
     for (let i = 0; i < NUMBER_OF_HANDLING_UNIT_TYPES; i++) {
       distinctHandlingUnits.push({
@@ -475,12 +482,13 @@ export default function Dashboard() {
       quoteNumber: quoteRequestId,
       quoteDate: new Date().toDateString(),
       customerName: event.customerCompanyName,
-      destination: event.destinations[0].city_id,
-      origin: event.origins[0].city_id,
-      equipmentType: event.equipmentData[0].type,
+      destination: event.destinations,
+      origin: event.origins,
+      equipmentType: event.equipmentData[0].equipment_type,
       weight: totalWeight,
       handling_units: distinctHandlingUnits,
       dimensions: dimensions,
+      quantities: quantities,
     };
 
     //this sets the quoteObject state to the newQuoteObject and so re-renders the quote card component with the updated quoteObject
@@ -604,6 +612,7 @@ export default function Dashboard() {
       <br />
       <br />
       <CarrierTable
+        quoteRequestId={quoteRequestId}
         tableData={tableData}
         setTableData={setTableData}
         quoteRequestDefined={quoteRequestDefined}

@@ -6,8 +6,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 export default function QuoteCard({
   handleQuoteRequestOpen,
   dimensions,
-  numberOfFeet,
-  numberOfPallets,
+  quantities,
   origin,
   destination,
   quoteNumber,
@@ -15,7 +14,40 @@ export default function QuoteCard({
   customerName,
   equipmentType,
   weight,
+  handling_units,
 }) {
+  let linearFeet = 0;
+  let totalPallets = 0;
+
+  if (handling_units) {
+    for (let i = 0; i < Object.keys(handling_units).length; i++) {
+      if (
+        handling_units[i].type === "Pallet" ||
+        handling_units[i].type === "Skid"
+      ) {
+        totalPallets = parseInt(quantities[i].quantity);
+        let palletLength = parseInt(dimensions[i].length);
+
+        linearFeet = ((totalPallets / 2) * palletLength) / 12;
+      }
+    }
+  }
+
+  console.log(
+    "QuoteCard:",
+    dimensions,
+    quantities,
+    origin,
+    destination,
+    quoteNumber,
+    quoteDate,
+    customerName,
+    equipmentType,
+    weight,
+    handling_units,
+    linearFeet
+  );
+
   return (
     <Card elevation={6}>
       {quoteNumber === "" ? (
@@ -34,10 +66,18 @@ export default function QuoteCard({
           {" " + quoteDate + " // "}
         </span>
         <span className="laneCardText" title="Origin">
-          {" " + origin + " to "}
+          {" " +
+            origin[0].city_name +
+            ", " +
+            origin[0].state_province_id +
+            " to "}
         </span>
         <span className="laneCardText" title="Destination">
-          {" " + destination + " // "}
+          {" " +
+            destination[0].city_name +
+            ", " +
+            destination[0].state_province_id +
+            "//"}
         </span>
         <span className="laneCardText" title="Equipment Type">
           {" " + equipmentType + " // "}
@@ -46,13 +86,19 @@ export default function QuoteCard({
           {" " + weight + " lbs // "}
         </span>
         <span className="laneCardText" title="Number of Pallets">
-          {" " + numberOfPallets + " pallets // "}
+          {" " + totalPallets + " pallets // "}
         </span>
         <span className="laneCardText" title="Dimensions">
-          {" " + dimensions + " // "}
+          {" " +
+            dimensions[0].length +
+            "x" +
+            dimensions[0].width +
+            "x" +
+            dimensions[0].height +
+            " // "}
         </span>
         <span className="laneCardText" title="Number of Feet">
-          {" " + numberOfFeet + " feet"}
+          {" " + linearFeet + " feet"}
         </span>
       </CardContent>
     </Card>

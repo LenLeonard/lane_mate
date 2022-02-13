@@ -19,6 +19,7 @@ export default function CarrierTable({
   tableData,
   quoteRequestDefined,
   setTableData,
+  quoteRequestId,
 }) {
   //rows is an array of objects, each a submit event returned from CarrierForm that will be displayed in the table
   //when CarrierTable is rendered, the empty tableData array is passed in as a prop from the Dashboard component,
@@ -28,9 +29,46 @@ export default function CarrierTable({
   //This function is passed as a callback to CarrierForm and called when the user clicks the "Add Carrier" button,
   //which is rendered in the Dashboard component. It takes the event from the form and pushes it to the tableData array,
   //which is then rendered dynamically in the table and then returned to the Dashboard component, where it is stored for search
+
+  async function addCarrier(event) {
+    try {
+      const response = await fetch("http://localhost:5000/carriers", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(event),
+      });
+      const body = await response.json();
+      const carrier_id = body.id;
+      return carrier_id;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   const createNewEntryOnSubmit = (event) => {
     if (quoteRequestDefined === true) {
       setTableData([...tableData, event]);
+      //add offer to offer table
+      //need to get quote_request_id from dashboard
+      //need to get carrier_id from database
+      addCarrier(event).then((carrier_id) => {
+        fetch("http://localhost:5000/offers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            quote_request_id: quoteRequestId,
+            carrier_id: carrier_id,
+            rate: event.rate,
+            notes: event.notes,
+          }),
+        });
+      });
+
+      console.log(event);
     }
   };
 
@@ -53,14 +91,14 @@ export default function CarrierTable({
             <TableBody>
               {rows.map((row) => (
                 <TableRow
-                  key={row.carrierName}
+                  key={row.carrier_name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell align="left">{row.carrierName}</TableCell>
-                  <TableCell align="right">{row.phoneNumber}</TableCell>
-                  <TableCell align="right">{row.extension}</TableCell>
-                  <TableCell align="right">{row.dispatchEmail}</TableCell>
-                  <TableCell align="right">{row.contactName}</TableCell>
+                  <TableCell align="left">{row.carrier_name}</TableCell>
+                  <TableCell align="right">{row.phone}</TableCell>
+                  <TableCell align="right">{row.contact_ext}</TableCell>
+                  <TableCell align="right">{row.contact_email}</TableCell>
+                  <TableCell align="right">{row.contact_name}</TableCell>
                   <TableCell align="right">{row.rate}</TableCell>
                   <TableCell align="right">{row.notes}</TableCell>
                 </TableRow>

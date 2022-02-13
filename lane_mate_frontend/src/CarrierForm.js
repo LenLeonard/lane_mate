@@ -30,10 +30,10 @@ export default function CarrierForm({
   //If the user has not defined a quote request, an alert is displayed to the user in a modal
 
   //Function used to format the phone number input
-  const formatPhoneNumber = (phoneNumber) => {
+  const formatPhoneNumber = (phone) => {
     let regexObj = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-    if (regexObj.test(phoneNumber)) {
-      let formattedPhoneNumber = phoneNumber.replace(regexObj, "($1) $2-$3");
+    if (regexObj.test(phone)) {
+      let formattedPhoneNumber = phone.replace(regexObj, "($1) $2-$3");
       return formattedPhoneNumber;
     } else {
       // Invalid phone number
@@ -42,12 +42,12 @@ export default function CarrierForm({
 
   const formSubmitandReset = (event) => {
     if (quoteRequestDefined === true) {
-      let formattedPhoneNumber = formatPhoneNumber(event.phoneNumber);
-      event.phoneNumber = formattedPhoneNumber;
+      let formattedPhoneNumber = formatPhoneNumber(event.phone);
+      event.phone = formattedPhoneNumber;
 
       createNewEntryOnSubmit(event);
       reset();
-      setFocus("carrierName");
+      setFocus("carrier_name");
     } else {
       handleAlertModalOpen();
     }
@@ -96,8 +96,8 @@ export default function CarrierForm({
           autoComplete="on"
         >
           <Controller
-            name="carrierName"
-            id="carrierName"
+            name="carrier_name"
+            id="carrier_name"
             control={control}
             render={({ field: { onChange, value } }) => (
               <TextField
@@ -108,13 +108,13 @@ export default function CarrierForm({
                 margin="normal"
                 color="secondary"
                 required={quoteRequestDefined}
-                {...register("carrierName")}
+                {...register("carrier_name")}
               />
             )}
           />
           <Controller
-            name="phoneNumber"
-            id="phoneNumber"
+            name="phone"
+            id="phone"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
@@ -125,21 +125,21 @@ export default function CarrierForm({
                 variant="outlined"
                 margin="normal"
                 color="secondary"
-                {...register("phoneNumber", {
+                {...register("phone", {
                   pattern: {
                     value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/,
                     message: "Phone number must be a 10 digit number",
                   },
                 })}
-                error={!!errors?.phoneNumber}
-                helperText={errors?.phoneNumber?.message}
+                error={!!errors?.phone}
+                helperText={errors?.phone?.message}
               />
             )}
           />
 
           <Controller
-            name="extension"
-            id="extension"
+            name="contact_ext"
+            id="contact_ext"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
@@ -150,19 +150,19 @@ export default function CarrierForm({
                 variant="outlined"
                 margin="normal"
                 color="secondary"
-                {...register("extension", {
+                {...register("contact_ext", {
                   pattern: {
                     message: "Extension must be between 1 and 4 digits",
                   },
                 })}
-                error={!!errors?.extension}
-                helperText={errors?.extension?.message}
+                error={!!errors?.contact_ext}
+                helperText={errors?.contact_ext?.message}
               />
             )}
           />
           <Controller
-            name="dispatchEmail"
-            id="dispatchEmail"
+            name="contact_email"
+            id="contact_email"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
@@ -173,20 +173,20 @@ export default function CarrierForm({
                 variant="outlined"
                 margin="normal"
                 color="secondary"
-                {...register("dispatchEmail", {
+                {...register("contact_email", {
                   pattern: {
                     value: /\S+@\S+\.\S+/,
                     message: "Invalid email address",
                   },
                 })}
-                error={!!errors?.dispatchEmail}
-                helperText={errors?.dispatchEmail?.message}
+                error={!!errors?.contact_email}
+                helperText={errors?.contact_email?.message}
               />
             )}
           />
           <Controller
-            name="contactName"
-            id="contactName"
+            name="contact_name"
+            id="contact_name"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
