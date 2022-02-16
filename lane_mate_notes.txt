@@ -377,7 +377,11 @@ main task is to format and display this data on the main dashboard card
 Feb 13//
 now when submitting a carrier through the carrier form, an offer object is posted to its endpoint
 
-next task: enable search functionality
+
+
+next task: 
+-organize project
+-enable search functionality
 
 
 

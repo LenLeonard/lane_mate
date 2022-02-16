@@ -7,13 +7,13 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const pg = require("pg");
-const offersAPI = require("./offersAPI");
-const citiesAPI = require("./citiesAPI");
-const lane_stopsAPI = require("./lane_stopsAPI");
-const customersAPI = require("./customersAPI");
-const carriersAPI = require("./carriersAPI");
-const quoteRequestsAPI = require("./quoteRequestsAPI");
-const handling_unitsAPI = require("./handling_unitsAPI");
+const offersAPI = require("./views/offersAPI");
+const citiesAPI = require("./views/citiesAPI");
+const lane_stopsAPI = require("./views/lane_stopsAPI");
+const customersAPI = require("./views/customersAPI");
+const carriersAPI = require("./views/carriersAPI");
+const quoteRequestsAPI = require("./views/quoteRequestsAPI");
+const handling_unitsAPI = require("./views/handling_unitsAPI");
 
 //middleware
 app.use(cors());

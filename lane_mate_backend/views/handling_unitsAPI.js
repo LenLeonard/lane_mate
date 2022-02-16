@@ -1,4 +1,4 @@
-const pool = require("./db");
+const pool = require("../db");
 
 module.exports = function (app, db) {
   ////handling_unit ENDPOINTS
