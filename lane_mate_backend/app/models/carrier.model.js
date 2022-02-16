@@ -1,24 +1,26 @@
-const pool = require("../db");
+const pool = require("./db");
 
-async function insertCarrier({
+module.exports = async function insertCarrier({
   carrier_name,
   phone,
   contact_ext,
   contact_email,
   contact_name,
+  user_id,
 }) {
   try {
     const newCarrier = await pool.query(
-      "INSERT INTO carriers (carrier_name, phone, contact_ext, contact_email, contact_name) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [carrier_name, phone, contact_ext, contact_email, contact_name]
+      "INSERT INTO carriers (carrier_name, phone, contact_ext, contact_email, contact_name, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [carrier_name, phone, contact_ext, contact_email, contact_name, user_id]
     );
 
     res.json(newCarrier.rows[0]);
   } catch (err) {
-    console.error(err.message);
+    console.error("carrier.model " + err.message);
   }
-}
+};
 
+/*
 // Find a single carrier by Name
 async function findCarrierByName(carrierName) {
   try {
@@ -91,3 +93,5 @@ async function removeCarrier(id, result) {
     result(null, res);
   });
 }
+
+*/

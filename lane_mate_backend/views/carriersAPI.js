@@ -1,3 +1,4 @@
+/*
 const pool = require("../db");
 
 module.exports = function (app, db) {
@@ -107,3 +108,4 @@ module.exports = function (app, db) {
     }
   });
 };
+*/

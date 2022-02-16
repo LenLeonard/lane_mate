@@ -53,6 +53,7 @@ export default function CarrierDialog({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("Access Token"),
         },
         body: JSON.stringify(event),
       });

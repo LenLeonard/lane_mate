@@ -11,7 +11,7 @@ const offersAPI = require("./views/offersAPI");
 const citiesAPI = require("./views/citiesAPI");
 const lane_stopsAPI = require("./views/lane_stopsAPI");
 const customersAPI = require("./views/customersAPI");
-const carriersAPI = require("./views/carriersAPI");
+const carriersAPI = require("./app/routes/carrier.routes");
 const quoteRequestsAPI = require("./views/quoteRequestsAPI");
 const handling_unitsAPI = require("./views/handling_unitsAPI");
 
@@ -57,7 +57,7 @@ app.post("/token", (req, res) => {
   if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
-    const accessToken = generateAccessToken({ email: user.email });
+    const accessToken = generateAccessToken({ email: user.email, id: user.id });
     res.json({ accessToken: accessToken });
   });
 });
@@ -98,9 +98,9 @@ app.post("/users/login", async (req, res) => {
     if (await bcrypt.compare(req.body.password, userTable.rows[0].password)) {
       //if password is correct, generate an access token and refresh token using the user email
 
-      const userEmail = { email: userTable.rows[0].email };
-      const accessToken = generateAccessToken(userEmail);
-      const refreshToken = generateRefreshToken(userEmail);
+      const user = { email: userTable.rows[0].email, id: userTable.rows[0].id };
+      const accessToken = generateAccessToken(user);
+      const refreshToken = generateRefreshToken(user);
 
       //For now, store refresh tokens in an array
       refreshTokens.push(refreshToken);
@@ -128,7 +128,7 @@ function generateRefreshToken(userEmail) {
 
 function generateAccessToken(userEmail) {
   return jwt.sign(userEmail, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15s",
+    expiresIn: "1h",
   });
 }
 
