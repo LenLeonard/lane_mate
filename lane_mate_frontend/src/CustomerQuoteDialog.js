@@ -44,15 +44,13 @@ export default function CustomerQuoteDialog({
     const sales_rep_id = localStorage.getItem("userId");
     try {
       //try to get the customers from the database
-      const response = await fetch(
-        `http://localhost:5000/customers/${sales_rep_id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch("http://localhost:5000/customers/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("Access Token")}`,
+        },
+      });
 
       const jsonData = await response.json(); //convert the response to json
       console.log(jsonData);

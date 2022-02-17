@@ -13,9 +13,9 @@ module.exports = (app) => {
 
   app.get("/carriers", checkAuth, getAllCarriers);
 
-  // DELETE a carrier
+  // DELETE a carrier by id
   app.delete("/carriers/:id", checkAuth, deleteCarrier);
 
-  // PUT a carrier
+  // PUT a carrier b id
   app.put("/carriers/:id", checkAuth, putCarrier);
 };

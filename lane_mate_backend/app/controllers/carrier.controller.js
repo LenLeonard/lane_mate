@@ -18,7 +18,6 @@ async function postCarrier(req, res) {
   const { carrier_name, phone, contact_ext, contact_email, contact_name } =
     req.body;
   const user = req.user;
-  console.log(user);
 
   //create new carrier
   const newCarrier = await insertCarrier({
@@ -35,9 +34,13 @@ async function postCarrier(req, res) {
 
 //get all carriers
 async function getAllCarriers(req, res) {
-  const allCarriers = await selectAllCarriers();
-  console.log(allCarriers);
-  res.json(allCarriers);
+  try {
+    const allCarriers = await selectAllCarriers();
+
+    res.json(allCarriers);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 //delete a carrier
@@ -51,14 +54,21 @@ async function deleteCarrier(req, res) {
 
 async function putCarrier(req, res) {
   const { id } = req.params;
-  const { carrier_name, phone, contact_ext, contact_email, contact_name } =
-    req.body;
+  const {
+    carrier_name,
+    phone,
+    contact_ext,
+    contact_email,
+    contact_name,
+    user_id,
+  } = req.body;
   const updatedCarrier = await updateCarrier(id, {
     carrier_name,
     phone,
     contact_ext,
     contact_email,
     contact_name,
+    user_id,
   });
   res.json(updatedCarrier);
 }

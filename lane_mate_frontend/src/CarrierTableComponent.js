@@ -52,6 +52,7 @@ export default function TableComponent({ rows, setRows }) {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("Access Token"),
         },
+        body,
       });
       console.log(response);
     } catch (err) {
