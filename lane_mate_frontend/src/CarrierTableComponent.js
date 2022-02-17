@@ -42,12 +42,38 @@ export default function TableComponent({ rows, setRows }) {
   const [previous, setPrevious] = React.useState({});
   const classes = useStyles();
 
+  const updateCarrier = async (row) => {
+    try {
+      const body = JSON.stringify(row);
+      console.log(body);
+      const response = await fetch(`http://localhost:5000/carriers/${row.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("Access Token"),
+        },
+      });
+      console.log(response);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   const onToggleEditMode = (id) => {
+    console.log(id);
     setRows((state) => {
+      //state is the current state of the table
       return rows.map((row) => {
+        //row is a single row of the table
         if (row.id === id) {
-          return { ...row, isEditMode: !row.isEditMode };
+          //if the row is the row we want to edit
+          //update the database
+
+          updateCarrier(row);
+
+          return { ...row, isEditMode: !row.isEditMode }; //return a new row with the isEditMode property set to the opposite of the current value
         }
+
         return row;
       });
     });
@@ -89,6 +115,10 @@ export default function TableComponent({ rows, setRows }) {
       console.log(id);
       const response = await fetch(`http://localhost:5000/carriers/${id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("Access Token"),
+        },
       });
       const jsonData = await response.json();
       console.log(jsonData);
@@ -106,7 +136,7 @@ export default function TableComponent({ rows, setRows }) {
             <TableCell align="left" />
             <TableCell align="left" />
             <TableCell align="left">Carrier Name</TableCell>
-            <TableCell align="left">Phome Number</TableCell>
+            <TableCell align="left">Phone Number</TableCell>
             <TableCell align="left">Contact Ext</TableCell>
             <TableCell align="left">Contact Email</TableCell>
             <TableCell align="left">Contact Name</TableCell>

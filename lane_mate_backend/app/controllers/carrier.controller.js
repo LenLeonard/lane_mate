@@ -5,9 +5,16 @@
 //validate request
 //do other stuff
 //call insert carrier function(imported frrom model)
-const insertCarrier = require("../models/carrier.model");
+const carrierModel = require("../models/carrier.model");
 
-module.exports = async function postCarrier(req, res) {
+const insertCarrier = carrierModel.insertCarrier;
+const selectAllCarriers = carrierModel.selectAllCarriers;
+const deleteFromCarriersById = carrierModel.deleteFromCarriersById;
+const updateCarrier = carrierModel.updateCarrier;
+
+module.exports = { getAllCarriers, postCarrier, deleteCarrier, putCarrier };
+
+async function postCarrier(req, res) {
   const { carrier_name, phone, contact_ext, contact_email, contact_name } =
     req.body;
   const user = req.user;
@@ -24,4 +31,34 @@ module.exports = async function postCarrier(req, res) {
   });
   //send response
   res.json(newCarrier);
-};
+}
+
+//get all carriers
+async function getAllCarriers(req, res) {
+  const allCarriers = await selectAllCarriers();
+  console.log(allCarriers);
+  res.json(allCarriers);
+}
+
+//delete a carrier
+async function deleteCarrier(req, res) {
+  const { id } = req.params;
+  const deletedCarrier = await deleteFromCarriersById(id);
+  res.json(deletedCarrier);
+}
+
+//update a carrier
+
+async function putCarrier(req, res) {
+  const { id } = req.params;
+  const { carrier_name, phone, contact_ext, contact_email, contact_name } =
+    req.body;
+  const updatedCarrier = await updateCarrier(id, {
+    carrier_name,
+    phone,
+    contact_ext,
+    contact_email,
+    contact_name,
+  });
+  res.json(updatedCarrier);
+}

@@ -1,7 +1,21 @@
 const checkAuth = require("../auth/checkAuth");
+const carrierController = require("../controllers/carrier.controller");
+const postCarrier = carrierController.postCarrier;
+const getAllCarriers = carrierController.getAllCarriers;
+const deleteCarrier = carrierController.deleteCarrier;
+const putCarrier = carrierController.putCarrier;
 
 module.exports = (app) => {
-  const postCarrier = require("../controllers/carrier.controller");
-  // Create new player
+  // POST new carrier
   app.post("/carriers", checkAuth, postCarrier);
+
+  // GET all carriers
+
+  app.get("/carriers", checkAuth, getAllCarriers);
+
+  // DELETE a carrier
+  app.delete("/carriers/:id", checkAuth, deleteCarrier);
+
+  // PUT a carrier
+  app.put("/carriers/:id", checkAuth, putCarrier);
 };

@@ -1,6 +1,13 @@
 const pool = require("./db");
 
-module.exports = async function insertCarrier({
+module.exports = {
+  insertCarrier,
+  selectAllCarriers,
+  deleteFromCarriersById,
+  updateCarrier,
+};
+
+async function insertCarrier({
   carrier_name,
   phone,
   contact_ext,
@@ -14,11 +21,53 @@ module.exports = async function insertCarrier({
       [carrier_name, phone, contact_ext, contact_email, contact_name, user_id]
     );
 
-    res.json(newCarrier.rows[0]);
+    console.log(newCarrier.rows[0]);
   } catch (err) {
     console.error("carrier.model " + err.message);
   }
-};
+}
+
+//select all carriers from the database
+
+async function selectAllCarriers() {
+  try {
+    const allCarriers = await pool.query("SELECT * FROM carriers "); //returns an array of objects
+    return allCarriers.rows;
+  } catch (err) {
+    console.error("selectAllCarriers error: " + err.message);
+  }
+}
+
+//put/update a carrier in the database
+
+async function updateCarrier(
+  id,
+  { carrier_name, phone, contact_ext, contact_email, contact_name, user_id }
+) {
+  try {
+    const newCarrier = await pool.query(
+      "INSERT INTO carriers (carrier_name, phone, contact_ext, contact_email, contact_name, user_id) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (carrier_name) DO UPDATE SET carrier_name = $1, phone = $2, contact_ext = $3, contact_email = $4, contact_name = $5, user_id = $6 RETURNING *",
+      [carrier_name, phone, contact_ext, contact_email, contact_name, user_id]
+    );
+    return newCarrier.rows[0];
+  } catch (err) {
+    console.error("putCarrier error: " + err.message);
+  }
+}
+
+//delete a carrier from the database
+
+async function deleteFromCarriersById(id) {
+  try {
+    const deletedCarrier = await pool.query(
+      "DELETE FROM carriers WHERE id = $1",
+      [id]
+    );
+    return deletedCarrier.rows;
+  } catch (err) {
+    console.error("deleteCarrier error: " + err.message);
+  }
+}
 
 /*
 // Find a single carrier by Name
