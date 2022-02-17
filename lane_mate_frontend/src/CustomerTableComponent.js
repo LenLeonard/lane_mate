@@ -39,6 +39,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TableComponent({ rows, setRows }) {
+  const updateCustomer = async (row) => {
+    try {
+      const body = JSON.stringify(row);
+      console.log(body);
+      const response = await fetch(
+        `http://localhost:5000/customers/${row.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("Access Token"),
+          },
+          body,
+        }
+      );
+      console.log(response);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   const [previous, setPrevious] = React.useState({});
   const classes = useStyles();
 
@@ -46,6 +66,7 @@ export default function TableComponent({ rows, setRows }) {
     setRows((state) => {
       return rows.map((row) => {
         if (row.id === id) {
+          updateCustomer(row);
           return { ...row, isEditMode: !row.isEditMode };
         }
         return row;
@@ -89,6 +110,10 @@ export default function TableComponent({ rows, setRows }) {
       console.log(id);
       const response = await fetch(`http://localhost:5000/customers/${id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("Access Token")}`,
+        },
       });
       const jsonData = await response.json();
       console.log(jsonData);

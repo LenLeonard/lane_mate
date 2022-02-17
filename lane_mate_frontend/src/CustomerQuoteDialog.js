@@ -78,6 +78,7 @@ export default function CustomerQuoteDialog({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("Access Token")}`,
         },
         body: JSON.stringify(newCustomer),
       });
