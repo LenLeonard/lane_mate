@@ -41,10 +41,10 @@ export default function HandlingUnitInput({ getLoadData }) {
   const [multiInput, setMultiInput] = useState([
     {
       type: "",
-      weight_lbs: "",
-      length_inches: "",
-      width_inches: "",
-      height_inches: "",
+      weightLbs: "",
+      lengthInches: "",
+      widthInches: "",
+      heightInches: "",
       quantity: "",
     },
   ]);
@@ -75,23 +75,23 @@ export default function HandlingUnitInput({ getLoadData }) {
       ...multiInput,
       {
         type: "",
-        weight_lbs: "",
-        length_inches: "",
-        width_inches: "",
-        height_inches: "",
+        weightLbs: "",
+        lengthInches: "",
+        widthInches: "",
+        heightInches: "",
         quantity: "",
       },
     ]);
     console.log(multiInput);
   };
 
-  const handling_unit_types = [
-    { handling_unit_type: "Pallet" },
-    { handling_unit_type: "Skid" },
-    { handling_unit_type: "Pipe" },
-    { handling_unit_type: "Crate" },
-    { handling_unit_type: "Box" },
-    { handling_unit_type: "Drum" },
+  const handlingUnitTypes = [
+    { handlingUnitType: "Pallet" },
+    { handlingUnitType: "Skid" },
+    { handlingUnitType: "Pipe" },
+    { handlingUnitType: "Crate" },
+    { handlingUnitType: "Box" },
+    { handlingUnitType: "Drum" },
   ];
 
   return (
@@ -106,8 +106,8 @@ export default function HandlingUnitInput({ getLoadData }) {
                   freeSolo
                   id="free-solo-2-demo"
                   disableClearable
-                  options={handling_unit_types.map(
-                    (option) => option.handling_unit_type
+                  options={handlingUnitTypes.map(
+                    (option) => option.handlingUnitTypes
                   )}
                   onChange={(e, value) => {
                     const inputList = [...multiInput];
@@ -139,28 +139,28 @@ export default function HandlingUnitInput({ getLoadData }) {
                   id="outlined-basic2"
                   label="Length"
                   variant="outlined"
-                  name="length_inches"
+                  name="lengthInches"
                   onChange={(e) => handleInputChange(e, i)}
                 />
                 <TextField
                   id="outlined-basic2"
                   label="Width"
                   variant="outlined"
-                  name="width_inches"
+                  name="widthInches"
                   onChange={(e) => handleInputChange(e, i)}
                 />
                 <TextField
                   id="outlined-basic2"
                   label="Height"
                   variant="outlined"
-                  name="height_inches"
+                  name="heightInches"
                   onChange={(e) => handleInputChange(e, i)}
                 />
                 <TextField
                   id="outlined-basic2"
                   label="Weight"
                   variant="outlined"
-                  name="weight_lbs"
+                  name="weightLbs"
                   onChange={(e) => handleInputChange(e, i)}
                 />
 

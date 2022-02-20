@@ -1,10 +1,3 @@
-//export const postCustomer = async (req, res) => {
-//authenticate user
-//get user data from token payload
-// use that to creater customer
-//validate request
-//do other stuff
-//call insert customer function(imported frrom model)
 const customerModel = require("../models/customer.model");
 
 const insertCustomer = customerModel.insertCustomer;

@@ -40,8 +40,8 @@ export default function HandlingUnitInput({ getEquipmentData }) {
   const classes = useStyles();
   const [multiInput, setMultiInput] = useState([
     {
-      equipment_type: "",
-      special_attributes: "",
+      equipmentType: "",
+      specialAttributes: "",
     },
   ]);
 
@@ -70,19 +70,19 @@ export default function HandlingUnitInput({ getEquipmentData }) {
     setMultiInput([
       ...multiInput,
       {
-        equipment_type: "",
-        special_attributes: "",
+        equipmentType: "",
+        specialAttributes: "",
       },
     ]);
     console.log(multiInput);
   };
 
-  const equipment_types = [
-    { equipment_type: "Dry Van" },
-    { equipment_type: "Reefer" },
-    { equipment_type: "Flatbed" },
-    { equipment_type: "Super-B" },
-    { equipment_type: "Curtain Side" },
+  const equipmentTypes = [
+    { equipmentType: "Dry Van" },
+    { equipmentType: "Reefer" },
+    { equipmentType: "Flatbed" },
+    { equipmentType: "Super-B" },
+    { equipmentType: "Curtain Side" },
   ];
 
   return (
@@ -97,8 +97,8 @@ export default function HandlingUnitInput({ getEquipmentData }) {
                   freeSolo
                   id="free-solo-2-demo"
                   disableClearable
-                  options={equipment_types.map(
-                    (option) => option.equipment_type
+                  options={equipmentTypes.map(
+                    (option) => option.equipmentTypes
                   )}
                   onChange={(e, value) => {
                     const inputList = [...multiInput];
@@ -122,7 +122,7 @@ export default function HandlingUnitInput({ getEquipmentData }) {
                 <TextField
                   id="outlined-basic1"
                   label="Special Attributes"
-                  name="special_attributes"
+                  name="specialAttributes"
                   variant="outlined"
                   onChange={(e) => handleInputChange(e, i)}
                 />

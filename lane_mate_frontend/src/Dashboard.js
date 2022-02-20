@@ -396,35 +396,36 @@ export default function Dashboard() {
 
     function addHandlingUnitsToDataBase(quote_request_id) {
       console.log(quote_request_id);
-      let handling_units = [];
+      let handlingUnits = [];
 
       for (let i = 0; i < Object.keys(event.loadData).length; i++) {
-        handling_units.push({
-          quote_request_id: quote_request_id,
+        handlingUnits.push({
+          quoteRequestId: quoteRequestId,
           type: event.loadData[i].type,
-          weight_lbs: event.loadData[i].weight_lbs,
-          length_inches: event.loadData[i].length_inches,
-          width_inches: event.loadData[i].width_inches,
-          height_inches: event.loadData[i].height_inches,
+          weightLbs: event.loadData[i].weightLbs,
+          lengthInches: event.loadData[i].lengthInches,
+          widthInches: event.loadData[i].widthInches,
+          heightInches: event.loadData[i].heightInches,
           quantity: event.loadData[i].quantity,
         });
       }
 
-      handling_units.forEach((handling_unit) => {
-        commitHandlingUnits(handling_unit);
-        handling_units = [];
+      handlingUnits.forEach((handlingUnit) => {
+        commitHandlingUnits(handlingUnit);
+        handlingUnits = [];
       });
     }
 
-    async function commitHandlingUnits(handling_unit) {
-      console.log(handling_unit);
+    async function commitHandlingUnits(handlingUnit) {
+      console.log(handlingUnit);
       try {
-        const response = await fetch("http://localhost:5000/handling_units", {
+        const response = await fetch("http://localhost:5000/handlingUnits", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("Access Token")}`,
           },
-          body: JSON.stringify(handling_unit),
+          body: JSON.stringify(handlingUnit),
         });
 
         const data = await response.json();
@@ -448,7 +449,7 @@ export default function Dashboard() {
     let totalWeight = 0;
 
     for (let i = 0; i < NUMBER_OF_HANDLING_UNIT_TYPES; i++) {
-      let weightPerUnit = event.loadData[i].weight_lbs;
+      let weightPerUnit = event.loadData[i].weightLbs;
       console.log(weightPerUnit);
       let numberOfUnits = event.loadData[i].quantity;
       console.log(numberOfUnits);
@@ -458,9 +459,9 @@ export default function Dashboard() {
     let dimensions = [];
     for (let i = 0; i < NUMBER_OF_HANDLING_UNIT_TYPES; i++) {
       dimensions.push({
-        length: event.loadData[i].length_inches,
-        width: event.loadData[i].width_inches,
-        height: event.loadData[i].height_inches,
+        length: event.loadData[i].lengthInches,
+        width: event.loadData[i].widthInches,
+        height: event.loadData[i].heightInches,
       });
     }
 
@@ -484,9 +485,9 @@ export default function Dashboard() {
       customerName: event.customerCompanyName,
       destination: event.destinations,
       origin: event.origins,
-      equipmentType: event.equipmentData[0].equipment_type,
+      equipmentType: event.equipmentData[0].equipmentType,
       weight: totalWeight,
-      handling_units: distinctHandlingUnits,
+      handlingUnits: distinctHandlingUnits,
       dimensions: dimensions,
       quantities: quantities,
     };

@@ -13,7 +13,7 @@ const lane_stopsAPI = require("./views/lane_stopsAPI");
 const customersAPI = require("./app/routes/customer.routes");
 const carriersAPI = require("./app/routes/carrier.routes");
 const quoteRequestsAPI = require("./views/quoteRequestsAPI");
-const handling_unitsAPI = require("./views/handling_unitsAPI");
+const handling_unitsAPI = require("./app/routes/handlingUnit.routes");
 
 //middleware
 app.use(cors());
