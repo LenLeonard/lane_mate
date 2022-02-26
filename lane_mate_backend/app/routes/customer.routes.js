@@ -1,4 +1,5 @@
-const checkAuth = require("../auth/checkAuth");
+const accessToken = require("../auth/accessToken");
+const validateAccessToken = accessToken.validateAccessToken;
 const customerController = require("../controllers/customer.controller");
 const postCustomer = customerController.postCustomer;
 const getAllCustomers = customerController.getAllCustomers;
@@ -7,15 +8,15 @@ const putCustomer = customerController.putCustomer;
 
 module.exports = (app) => {
   // POST new customer
-  app.post("/customers", checkAuth, postCustomer);
+  app.post("/customers", validateAccessToken, postCustomer);
 
   // GET all customers by sales rep id
 
-  app.get("/customers", checkAuth, getAllCustomers);
+  app.get("/customers", validateAccessToken, getAllCustomers);
 
   // DELETE a customer by id
-  app.delete("/customers/:id", checkAuth, deleteCustomer);
+  app.delete("/customers/:id", validateAccessToken, deleteCustomer);
 
   // PUT a customer b id
-  app.put("/customers/:id", checkAuth, putCustomer);
+  app.put("/customers/:id", validateAccessToken, putCustomer);
 };

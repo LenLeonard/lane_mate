@@ -7,13 +7,15 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const pg = require("pg");
-const offersAPI = require("./views/offersAPI");
-const citiesAPI = require("./views/citiesAPI");
-const lane_stopsAPI = require("./views/lane_stopsAPI");
+const offersAPI = require("./app/routes/offer.routes");
+const citiesAPI = require("./app/routes/city.routes");
+const lane_stopsAPI = require("./app/routes/laneStop.routes");
 const customersAPI = require("./app/routes/customer.routes");
 const carriersAPI = require("./app/routes/carrier.routes");
-const quoteRequestsAPI = require("./views/quoteRequestsAPI");
+const quoteRequestsAPI = require("./app/routes/quoteRequest.routes");
 const handling_unitsAPI = require("./app/routes/handlingUnit.routes");
+const accessTokenAPI = require("./app/routes/token.routes");
+const refreshTokenAPI = require("./app/routes/token.routes");
 
 //middleware
 app.use(cors());
@@ -26,25 +28,7 @@ customersAPI(app);
 carriersAPI(app);
 quoteRequestsAPI(app);
 handling_unitsAPI(app);
-
-//Authentice Token Function
-
-function authenticateToken(req, res, next) {
-  //get token from header
-  const authHeader = req.headers["authorization"]; // Bearer token
-  const token = authHeader && authHeader.split(" ")[1]; // token
-  if (token == null) {
-    // if token is null
-    return res.sendStatus(401); // send status 401
-  }
-  //check if token is valid
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403); // send status 403
-    req.user = user; // user is returned from jwt.verify, from the access token payload
-
-    next(); // call next middleware
-  });
-}
+accessTokenAPI(app);
 
 //Auth Server Stuff
 

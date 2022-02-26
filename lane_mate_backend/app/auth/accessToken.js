@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const checkAuth = (req, res, next) => {
+const validateAccessToken = (req, res, next) => {
   const authHeader = req.headers["authorization"]; // Bearer token
   const token = authHeader && authHeader.split(" ")[1]; // token
   if (token == null) {
@@ -14,4 +14,11 @@ const checkAuth = (req, res, next) => {
   });
   next(); // call next middleware
 };
-module.exports = checkAuth;
+
+const generateAccessToken = (user) => {
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "15m",
+  });
+};
+
+module.exports = { validateAccessToken, generateAccessToken };

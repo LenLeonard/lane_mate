@@ -5,8 +5,6 @@ const selectAllCities = cityModel.selectAllCities;
 const deleteFromCitiesById = cityModel.deleteFromCitiesById;
 const updateCity = cityModel.updateCity;
 
-module.exports = { getAllCities, postCity, deleteCity, putCity };
-
 async function postCity(req, res) {
   const { name, stateProvinceId, stateProvinceName } = req.body;
   const user = req.user;
@@ -51,3 +49,4 @@ async function putCity(req, res) {
   });
   res.json(updatedCity);
 }
+module.exports = { getAllCities, postCity, deleteCity, putCity };
