@@ -1,12 +1,9 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const pool = require("./db");
-const { application } = require("express");
+
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const pg = require("pg");
+
 const offersAPI = require("./app/routes/offer.routes");
 const citiesAPI = require("./app/routes/city.routes");
 const lane_stopsAPI = require("./app/routes/laneStop.routes");

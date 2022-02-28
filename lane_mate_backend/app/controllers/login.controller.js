@@ -1,19 +1,62 @@
 const loginModel = require("../models/login.model");
+const bcrypt = require("bcrypt");
+const accessToken = require("../auth/accessToken");
+const generateAccessToken = accessToken.generateAccessToken;
+const refreshToken = require("../auth/refreshToken");
+const generateRefreshToken = refreshToken.generateRefreshToken;
 
-const insertLogin = loginModel.insertLogin;
+const refreshTokens = [];
+
+const selectLogin = loginModel.selectLogin;
 
 module.exports = { postLogin };
 
+const verifyPassword = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
+};
+
 async function postLogin(req, res) {
-  const { firstName, email, lastName, password } = req.body;
-  const user = req.user;
+  try {
+    const { email, password } = req.body;
 
-  //create new user
-  const newUser = await selectLogin({
-    email,
+    //create new user
+    const newUser = await selectLogin({
+      email,
+      password,
+    });
+    if (newUser.length === null) {
+      return res.status(400).send("Cannot find user");
+    }
+    console.log(newUser);
+    console.log(password);
+    console.log(newUser[0].password);
 
-    password,
-  });
-  //send response
-  res.json(newUser);
+    //invoke bcrypt to compare password
+    verifyPassword(password, newUser[0].password).then((result) => {
+      if (result) {
+        //if password is correct, generate an access token and refresh token using the user email
+
+        const user = { email: newUser[0].email, id: newUser[0].id };
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+
+        //For now, store refresh tokens in an array
+        refreshTokens.push(refreshToken);
+
+        //return access token and refresh token to client
+        res.json({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          userName: newUser[0].first_name + " " + newUser[0].last_name,
+          userEmail: newUser[0].email,
+          userId: newUser[0].id,
+        });
+        refreshTokens.push(refreshToken);
+      } else {
+        res.status(400).send("Invalid password");
+      }
+    });
+  } catch (err) {
+    console.error("postLogin error: " + err.message);
+  }
 }
