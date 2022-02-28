@@ -9,9 +9,10 @@ module.exports = {
 
 async function insertUser({ firstName, email, lastName, password }) {
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await pool.query(
       "INSERT INTO users (first_name, email, last_name, password) VALUES ($1, $2, $3, $4) RETURNING *",
-      [firstName, email, lastName, password]
+      [firstName, email, lastName, hashedPassword]
     );
   } catch (err) {
     console.error("user.model " + err.message);

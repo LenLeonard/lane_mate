@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
-
-let refreshTokens = [];
+const accessToken = require("../auth/accessToken");
+const generateAccessToken = accessToken.generateAccessToken;
 
 const validateRefreshToken = (req, res) => {
   const refreshToken = req.body.refreshToken;

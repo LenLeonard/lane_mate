@@ -8,23 +8,23 @@ module.exports = {
 };
 
 async function insertCarrier({
-  carrier_name,
+  carrierName,
   phone,
-  contact_ext,
-  contact_email,
-  contact_name,
-  user_id,
+  contactExt,
+  contactEmail,
+  contactName,
+  userId,
 }) {
   try {
     const newCarrier = await pool.query(
       "INSERT INTO carriers (carrier_name, phone, contact_ext, contact_email, contact_name, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [carrier_name, phone, contact_ext, contact_email, contact_name, user_id]
+      [carrierName, phone, contactExt, contactEmail, contactName, userId]
     );
   } catch (err) {
     console.error("carrier.model " + err.message);
   }
 }
-
+``;
 //select all carriers from the database
 
 async function selectAllCarriers() {
