@@ -10,7 +10,7 @@ module.exports = {
 async function insertQuoteRequest({ salesRepId, customerId }) {
   try {
     const newQuoteRequest = await pool.query(
-      "INSERT INTO quote_requests (sales_rep_id, customer_id) VALUES ($1, $2, $3, $4) RETURNING *",
+      "INSERT INTO quote_requests (sales_rep_id, customer_id) VALUES ($1, $2) RETURNING *",
       [salesRepId, customerId]
     );
   } catch (err) {

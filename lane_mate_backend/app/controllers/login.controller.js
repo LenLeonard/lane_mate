@@ -5,7 +5,7 @@ const generateAccessToken = accessToken.generateAccessToken;
 const refreshToken = require("../auth/refreshToken");
 const generateRefreshToken = refreshToken.generateRefreshToken;
 
-const refreshTokens = [];
+const refreshTokens = refreshToken.refreshTokens;
 
 const selectLogin = loginModel.selectLogin;
 
@@ -27,9 +27,6 @@ async function postLogin(req, res) {
     if (newUser.length === null) {
       return res.status(400).send("Cannot find user");
     }
-    console.log(newUser);
-    console.log(password);
-    console.log(newUser[0].password);
 
     //invoke bcrypt to compare password
     verifyPassword(password, newUser[0].password).then((result) => {

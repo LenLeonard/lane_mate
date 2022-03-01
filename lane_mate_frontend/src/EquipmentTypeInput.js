@@ -97,12 +97,10 @@ export default function HandlingUnitInput({ getEquipmentData }) {
                   freeSolo
                   id="free-solo-2-demo"
                   disableClearable
-                  options={equipmentTypes.map(
-                    (option) => option.equipmentTypes
-                  )}
+                  options={equipmentTypes.map((option) => option.equipmentType)}
                   onChange={(e, value) => {
                     const inputList = [...multiInput];
-                    inputList[i].equipment_type = value;
+                    inputList[i].equipmentType = value;
                     setMultiInput(inputList);
                   }}
                   renderInput={(params) => (

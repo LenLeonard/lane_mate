@@ -1,73 +1,81 @@
 const pool = require("./db");
 
 module.exports = {
-  insertCity,
-  selectAllCities,
-  deleteFromCitiesById,
-  updateCity,
+  insertLaneStop,
+  selectAllLaneStops,
+  deleteFromLaneStopsById,
+  updateLaneStop,
 };
 
-async function insertCity({ name, stateProvinceID, stateProvinceName }) {
+async function insertLaneStop({ cityId, isOrigin, quoteRequestId }) {
   try {
-    const newCity = await pool.query(
-      "INSERT INTO lane_stops (name, state_province_id) VALUES ($1, $2, $3) RETURNING *",
-      [name, stateProvinceID, stateProvinceName]
+    const laneStop = await pool.query(
+      "INSERT INTO lane_stops (city_id, is_origin, quote_request_id) VALUES ($1, $2, $3) RETURNING *",
+      [cityId, isOrigin, quoteRequestId]
     );
   } catch (err) {
-    console.error("city.model " + err.message);
+    console.error("lane_stop post " + err.message);
   }
 }
 
 //select all laneStops from the database
 
-async function selectAllCities() {
+async function selectAllLaneStops() {
   try {
-    const allCities = await pool.query("SELECT * FROM lane_stops "); //returns an array of objects
-    return allCities.rows;
+    const allLaneStops = await pool.query("SELECT * FROM lane_stops "); //returns an array of objects
+    return allLaneStops.rows;
   } catch (err) {
-    console.error("selectAllCities error: " + err.message);
+    console.error("selectAllLaneStops error: " + err.message);
   }
 }
 
-//put/update a city in the database
+//put/update a laneStop in the database
 
-async function updateCity(
+async function updateLaneStop(
   id,
-  { city_name, phone, contact_ext, contact_email, contact_name, user_id }
+  { laneStop_name, phone, contact_ext, contact_email, contact_name, user_id }
 ) {
   try {
-    const newCity = await pool.query(
-      "UPDATE lane_stops SET city_name = $1, phone = $2, contact_ext = $3, contact_email = $4, contact_name = $5, user_id = $6 WHERE id = $7 RETURNING *",
-      [city_name, phone, contact_ext, contact_email, contact_name, user_id, id]
+    const newLaneStop = await pool.query(
+      "UPDATE lane_stops SET laneStop_name = $1, phone = $2, contact_ext = $3, contact_email = $4, contact_name = $5, user_id = $6 WHERE id = $7 RETURNING *",
+      [
+        laneStop_name,
+        phone,
+        contact_ext,
+        contact_email,
+        contact_name,
+        user_id,
+        id,
+      ]
     );
-    return newCity.rows[0];
+    return newLaneStop.rows[0];
   } catch (err) {
-    console.error("putCity error: " + err.message);
+    console.error("putLaneStop error: " + err.message);
   }
 }
 
-//delete a city from the database
+//delete a laneStop from the database
 
-async function deleteFromCitiesById(id) {
+async function deleteFromLaneStopsById(id) {
   try {
-    const deletedCity = await pool.query(
+    const deletedLaneStop = await pool.query(
       "DELETE FROM lane_stops WHERE id = $1",
       [id]
     );
-    return deletedCity.rows;
+    return deletedLaneStop.rows;
   } catch (err) {
-    console.error("deleteCity error: " + err.message);
+    console.error("deleteLaneStop error: " + err.message);
   }
 }
 
 /*
-// Find a single city by Name
-async function findCityByName(cityName) {
+// Find a single laneStop by Name
+async function findLaneStopByName(laneStopName) {
   try {
-    const city = await pool.query(
-      `SELECT * FROM lane_stops WHERE cityName = '${cityName}'`
+    const laneStop = await pool.query(
+      `SELECT * FROM lane_stops WHERE laneStopName = '${laneStopName}'`
     );
-    res.json(newCity.rows[0]);
+    res.json(newLaneStop.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -93,11 +101,11 @@ async function getByUserId(userId, result) {
   );
 }
 
-// Update City by Id
-async function updateCityById(id, city, result) {
+// Update LaneStop by Id
+async function updateLaneStopById(id, laneStop, result) {
   await pool.query(
-    `UPDATE lane_stops SET cityName = ? WHERE id = ?`,
-    [city.cityName, id],
+    `UPDATE lane_stops SET laneStopName = ? WHERE id = ?`,
+    [laneStop.laneStopName, id],
     (err, res) => {
       if (err) {
         console.log(`error: `, err);
@@ -110,15 +118,15 @@ async function updateCityById(id, city, result) {
       }
       console.log(`updated lane_stops: `, {
         id: id,
-        cityName: city.cityName,
+        laneStopName: laneStop.laneStopName,
       });
-      result(null, { id: id, cityName: city.cityName });
+      result(null, { id: id, laneStopName: laneStop.laneStopName });
     }
   );
 }
 
-// Delete a city by Id
-async function removeCity(id, result) {
+// Delete a laneStop by Id
+async function removeLaneStop(id, result) {
   await pool.query(`DELETE FROM lane_stops WHERE id = ?`, id, (err, res) => {
     if (err) {
       console.log(`error: `, err);
@@ -129,7 +137,7 @@ async function removeCity(id, result) {
       result({ kind: `not_found` }, null);
       return;
     }
-    console.log(`deleted city with id: ${id}`);
+    console.log(`deleted laneStop with id: ${id}`);
     result(null, res);
   });
 }

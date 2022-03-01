@@ -96,8 +96,8 @@ export default function CarrierForm({
           autoComplete="on"
         >
           <Controller
-            name="carrier_name"
-            id="carrier_name"
+            name="carrierName"
+            id="carrierName"
             control={control}
             render={({ field: { onChange, value } }) => (
               <TextField
@@ -108,7 +108,7 @@ export default function CarrierForm({
                 margin="normal"
                 color="secondary"
                 required={quoteRequestDefined}
-                {...register("carrier_name")}
+                {...register("carrierName")}
               />
             )}
           />
@@ -138,8 +138,8 @@ export default function CarrierForm({
           />
 
           <Controller
-            name="contact_ext"
-            id="contact_ext"
+            name="contactExt"
+            id="contactExt"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
@@ -150,19 +150,19 @@ export default function CarrierForm({
                 variant="outlined"
                 margin="normal"
                 color="secondary"
-                {...register("contact_ext", {
+                {...register("contactExt", {
                   pattern: {
                     message: "Extension must be between 1 and 4 digits",
                   },
                 })}
-                error={!!errors?.contact_ext}
-                helperText={errors?.contact_ext?.message}
+                error={!!errors?.contactExt}
+                helperText={errors?.contactExt?.message}
               />
             )}
           />
           <Controller
-            name="contact_email"
-            id="contact_email"
+            name="contactEmail"
+            id="contactEmail"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
@@ -173,20 +173,20 @@ export default function CarrierForm({
                 variant="outlined"
                 margin="normal"
                 color="secondary"
-                {...register("contact_email", {
+                {...register("contactEmail", {
                   pattern: {
                     value: /\S+@\S+\.\S+/,
                     message: "Invalid email address",
                   },
                 })}
-                error={!!errors?.contact_email}
-                helperText={errors?.contact_email?.message}
+                error={!!errors?.contactEmail}
+                helperText={errors?.contactEmail?.message}
               />
             )}
           />
           <Controller
-            name="contact_name"
-            id="contact_name"
+            name="contactName"
+            id="contactName"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (

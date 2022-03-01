@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const accessToken = require("../auth/accessToken");
 const generateAccessToken = accessToken.generateAccessToken;
+let refreshTokens = [];
 
 const validateRefreshToken = (req, res) => {
   const refreshToken = req.body.refreshToken;
@@ -20,4 +21,4 @@ const generateRefreshToken = (user) => {
   });
 };
 
-module.exports = { validateRefreshToken, generateRefreshToken };
+module.exports = { validateRefreshToken, generateRefreshToken, refreshTokens };

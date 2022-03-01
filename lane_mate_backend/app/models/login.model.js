@@ -1,10 +1,4 @@
 const pool = require("./db");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const accessToken = require("../auth/accessToken");
-const generateAccessToken = accessToken.generateAccessToken;
-const generateRefreshToken = accessToken.generateRefreshToken;
-let refreshTokens = [];
 
 module.exports = { selectLogin };
 

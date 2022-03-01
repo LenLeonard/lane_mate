@@ -14,8 +14,8 @@ module.exports = {
 };
 
 async function postQuoteRequest(req, res) {
-  const { quoteRequestId, carrierId, rate, notes } = req.body;
-  const user = req.user;
+  const { salesRepId, customerId } = req.body;
+  console.log(req.body);
 
   //create new carrier
   const newQuoteRequest = await insertQuoteRequest({

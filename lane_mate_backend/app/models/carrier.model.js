@@ -20,6 +20,7 @@ async function insertCarrier({
       "INSERT INTO carriers (carrier_name, phone, contact_ext, contact_email, contact_name, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       [carrierName, phone, contactExt, contactEmail, contactName, userId]
     );
+    return newCarrier.rows[0];
   } catch (err) {
     console.error("carrier.model " + err.message);
   }
@@ -40,20 +41,12 @@ async function selectAllCarriers() {
 
 async function updateCarrier(
   id,
-  { carrier_name, phone, contact_ext, contact_email, contact_name, user_id }
+  { carrierName, phone, contactExt, contactEmail, contactName, userId }
 ) {
   try {
     const newCarrier = await pool.query(
       "UPDATE carriers SET carrier_name = $1, phone = $2, contact_ext = $3, contact_email = $4, contact_name = $5, user_id = $6 WHERE id = $7 RETURNING *",
-      [
-        carrier_name,
-        phone,
-        contact_ext,
-        contact_email,
-        contact_name,
-        user_id,
-        id,
-      ]
+      [carrierName, phone, contactExt, contactEmail, contactName, userId]
     );
     return newCarrier.rows[0];
   } catch (err) {

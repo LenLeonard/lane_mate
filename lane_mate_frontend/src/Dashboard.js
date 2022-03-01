@@ -39,9 +39,9 @@ export default function Dashboard() {
 
     const tokenExpiration = JSON.parse(decodedToken).exp;
     const currentTime = Math.floor(Date.now() / 1000);
-    console.log(tokenExpiration - currentTime);
+
     if (tokenExpiration < currentTime) {
-      logout();
+      console.log("token expired");
     }
   }
 
@@ -55,6 +55,7 @@ export default function Dashboard() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("Access Token"),
         },
         body: body,
       });
@@ -66,9 +67,10 @@ export default function Dashboard() {
       console.error(error.message);
     }
   }
-  //checkToken();
-  //setInterval(() => refreshToken(), 1000 * 60 * 29);
-  //setInterval(() => checkToken(), 1000 * 60 * 30);
+  //update the token every 29 minutes
+  setInterval(() => refreshToken(), 1000 * 60 * 29);
+  //check the token every 31 minutes
+  setInterval(() => checkToken(), 1000 * 31);
 
   const { reset, handleSubmit } = useForm();
 
@@ -332,17 +334,18 @@ export default function Dashboard() {
     //create a new quote request object and add to db, return the new quote request id
 
     const newQuoteRequest = {
-      sales_rep_id: localStorage.getItem("userId"),
-      customer_id: event.customerId,
+      salesRepId: localStorage.getItem("userId"),
+      customerId: event.customerId,
     };
 
     async function createNewQuoteRequest() {
       console.log("creating new quote request");
       try {
-        const response = await fetch("http://localhost:5000/quote_requests", {
+        const response = await fetch("http://localhost:5000/quoteRequests", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("Access Token"),
           },
           body: JSON.stringify(newQuoteRequest),
         });
@@ -384,6 +387,7 @@ export default function Dashboard() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("Access Token"),
           },
           body: JSON.stringify(lane_stop),
         });

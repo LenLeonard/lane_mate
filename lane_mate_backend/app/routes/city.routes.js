@@ -12,7 +12,7 @@ module.exports = (app) => {
 
   // GET all cities
 
-  app.get("/cities", validateAccessToken, getAllCities);
+  app.get("/cities", getAllCities);
 
   // DELETE a city by id
   app.delete("/cities/:id", validateAccessToken, deleteCity);

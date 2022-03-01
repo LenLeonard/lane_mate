@@ -33,7 +33,7 @@ export default function AddCarrierDialog({
               contact name.
             </DialogContentText>
             <Controller
-              name="carrier_name"
+              name="carrierName"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -41,7 +41,7 @@ export default function AddCarrierDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="name"
+                  id="carrierName"
                   label="Carrier Name"
                   type="outline"
                   variant="standard"
@@ -58,7 +58,7 @@ export default function AddCarrierDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="origin"
+                  id="phone"
                   label="Phone Number"
                   type="outline"
                   variant="standard"
@@ -66,7 +66,7 @@ export default function AddCarrierDialog({
               )}
             />
             <Controller
-              name="contact_ext"
+              name="contactExt"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -74,7 +74,7 @@ export default function AddCarrierDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="destination"
+                  id="contactExt"
                   label="Extension"
                   type="outline"
                   variant="standard"
@@ -82,7 +82,7 @@ export default function AddCarrierDialog({
               )}
             />
             <Controller
-              name="contact_email"
+              name="contactEmail"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -90,7 +90,7 @@ export default function AddCarrierDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="equipmentType"
+                  id="contactEmail"
                   label="Contact Email"
                   type="outline"
                   variant="standard"
@@ -98,7 +98,7 @@ export default function AddCarrierDialog({
               )}
             />
             <Controller
-              name="contact_name"
+              name="contactName"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -106,7 +106,7 @@ export default function AddCarrierDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="weight"
+                  id="contactName"
                   label="Contact Name"
                   type="outline"
                   variant="standard"
@@ -114,7 +114,7 @@ export default function AddCarrierDialog({
               )}
             />
             <Controller
-              name="state_province"
+              name="stateProvince"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -122,7 +122,7 @@ export default function AddCarrierDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="state"
+                  id="stateProvince"
                   label="State/Province"
                   type="outline"
                   variant="standard"

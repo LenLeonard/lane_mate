@@ -121,14 +121,14 @@ export default function LaneStopInput({ getLaneStops, cities }) {
               </>
             );
           })}
-          {destinationIDs.map((x, i) => {
+          {destinationIDs.map((x, j) => {
             return (
               <>
-                <div key={i}>
+                <div key={j}>
                   <DestinationCitySelectTEST
                     cities={cities}
                     setDestinationIDs={setDestinationIDs}
-                    index={i}
+                    index={j}
                     destinationIDs={destinationIDs}
                     setLaneStops={setLaneStops}
                   />
@@ -140,11 +140,11 @@ export default function LaneStopInput({ getLaneStops, cities }) {
                     Add Destination
                   </Button>
 
-                  {i > 0 && (
+                  {j > 0 && (
                     <Button
                       variant="outlined"
                       color="secondary"
-                      onClick={(e) => handleDestinationRemoveClick(e, i)}
+                      onClick={(e) => handleDestinationRemoveClick(e, j)}
                     >
                       Delete
                     </Button>

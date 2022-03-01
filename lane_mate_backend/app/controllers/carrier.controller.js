@@ -4,25 +4,30 @@ const insertCarrier = carrierModel.insertCarrier;
 const selectAllCarriers = carrierModel.selectAllCarriers;
 const deleteFromCarriersById = carrierModel.deleteFromCarriersById;
 const updateCarrier = carrierModel.updateCarrier;
+const snakeToCamel = require("../utils/snakeToCamel");
+const keysToCamel = snakeToCamel.keysToCamel;
 
 module.exports = { getAllCarriers, postCarrier, deleteCarrier, putCarrier };
 
 async function postCarrier(req, res) {
-  const { carrier_name, phone, contact_ext, contact_email, contact_name } =
+  const { carrierName, phone, contactExt, contactEmail, contactName, userId } =
     req.body;
   const user = req.user;
 
   //create new carrier
   const newCarrier = await insertCarrier({
-    carrier_name,
+    carrierName,
     phone,
-    contact_ext,
-    contact_email,
-    contact_name,
-    user_id: user.id,
+    contactExt,
+    contactEmail,
+    contactName,
+    userId: user.id,
   });
   //send response
-  res.json(newCarrier);
+  console.log(newCarrier);
+  const newCarrierCamelCase = keysToCamel(newCarrier);
+
+  res.json(newCarrierCamelCase);
 }
 
 //get all carriers
@@ -30,7 +35,13 @@ async function getAllCarriers(req, res) {
   try {
     const allCarriers = await selectAllCarriers();
 
-    res.json(allCarriers);
+    //covert each carrier object to camel case
+
+    const allCarriersCamelCase = allCarriers.map((carrier) => {
+      return keysToCamel(carrier);
+    });
+
+    res.json(allCarriersCamelCase);
   } catch (error) {
     console.log(error);
   }

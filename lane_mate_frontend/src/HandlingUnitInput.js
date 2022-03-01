@@ -107,7 +107,7 @@ export default function HandlingUnitInput({ getLoadData }) {
                   id="free-solo-2-demo"
                   disableClearable
                   options={handlingUnitTypes.map(
-                    (option) => option.handlingUnitTypes
+                    (option) => option.handlingUnitType
                   )}
                   onChange={(e, value) => {
                     const inputList = [...multiInput];

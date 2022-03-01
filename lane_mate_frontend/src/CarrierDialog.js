@@ -56,6 +56,7 @@ export default function CarrierDialog({
 
   async function addNewCarrier(event) {
     //post a new carrier to the database
+    console.log(event);
     try {
       const response = await fetch("http://localhost:5000/carriers", {
         method: "POST",
