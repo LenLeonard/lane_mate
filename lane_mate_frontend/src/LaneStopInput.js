@@ -16,11 +16,9 @@ import {
 } from "@material-ui/core";
 
 export default function LaneStopInput({ getLaneStops, cities }) {
-  const [originIDs, setOriginIDs] = useState([
-    { city_id: "", is_origin: true },
-  ]);
+  const [originIDs, setOriginIDs] = useState([{ cityId: "", isOrigin: true }]);
   const [destinationIDs, setDestinationIDs] = useState([
-    { city_id: "", is_origin: false },
+    { cityId: "", isOrigin: false },
   ]);
 
   const [LaneStops, setLaneStops] = useState({
@@ -45,8 +43,8 @@ export default function LaneStopInput({ getLaneStops, cities }) {
     setOriginIDs([
       ...originIDs,
       {
-        city_id: "",
-        is_origin: false,
+        cityId: "",
+        isOrigin: false,
       },
     ]);
     console.log(originIDs);
@@ -71,8 +69,8 @@ export default function LaneStopInput({ getLaneStops, cities }) {
     setDestinationIDs([
       ...destinationIDs,
       {
-        city_id: "",
-        is_origin: false,
+        cityId: "",
+        isOrigin: false,
       },
     ]);
     setLaneStops({

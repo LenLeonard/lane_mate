@@ -14,16 +14,16 @@ export default function QuoteCard({
   customerName,
   equipmentType,
   weight,
-  handling_units,
+  handlingUnits,
 }) {
   let linearFeet = 0;
   let totalPallets = 0;
 
-  if (handling_units) {
-    for (let i = 0; i < Object.keys(handling_units).length; i++) {
+  if (handlingUnits) {
+    for (let i = 0; i < Object.keys(handlingUnits).length; i++) {
       if (
-        handling_units[i].type === "Pallet" ||
-        handling_units[i].type === "Skid"
+        handlingUnits[i].type === "Pallet" ||
+        handlingUnits[i].type === "Skid"
       ) {
         totalPallets = parseInt(quantities[i].quantity);
         let palletLength = parseInt(dimensions[i].length);
@@ -44,7 +44,7 @@ export default function QuoteCard({
     customerName,
     equipmentType,
     weight,
-    handling_units,
+    handlingUnits,
     linearFeet
   );
 
@@ -66,17 +66,13 @@ export default function QuoteCard({
           {" " + quoteDate + " // "}
         </span>
         <span className="laneCardText" title="Origin">
-          {" " +
-            origin[0].city_name +
-            ", " +
-            origin[0].state_province_id +
-            " to "}
+          {" " + origin[0].cityName + ", " + origin[0].stateProvinceId + " to "}
         </span>
         <span className="laneCardText" title="Destination">
           {" " +
-            destination[0].city_name +
+            destination[0].cityName +
             ", " +
-            destination[0].state_province_id +
+            destination[0].stateProvinceId +
             "//"}
         </span>
         <span className="laneCardText" title="Equipment Type">

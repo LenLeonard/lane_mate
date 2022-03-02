@@ -8,25 +8,25 @@ module.exports = {
 };
 
 async function insertCustomer({
-  sales_rep_id,
-  company_name,
-  primary_contact,
-  contact_email,
-  contact_phone,
+  salesRepId,
+  companyName,
+  primaryContact,
+  contactEmail,
+  contactPhone,
   city,
-  state_province,
+  stateProvince,
 }) {
   try {
     const newCustomer = await pool.query(
       "INSERT INTO customers (sales_rep_id, company_name, primary_contact, contact_email, contact_phone, city, state_province) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
       [
-        sales_rep_id,
-        company_name,
-        primary_contact,
-        contact_email,
-        contact_phone,
+        salesRepId,
+        companyName,
+        primaryContact,
+        contactEmail,
+        contactPhone,
         city,
-        state_province,
+        stateProvince,
       ]
     );
 

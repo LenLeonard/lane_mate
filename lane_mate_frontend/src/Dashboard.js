@@ -55,7 +55,6 @@ export default function Dashboard() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("Access Token"),
         },
         body: body,
       });
@@ -169,11 +168,11 @@ export default function Dashboard() {
 
     tableData.forEach((offer) => {
       const carrier = {
-        carrier_name: offer.carrierName,
-        phone_number: offer.phoneNumber,
-        contact_ext: offer.extension,
-        contact_email: offer.dispatchEmail,
-        contact_name: offer.contactName,
+        carrierName: offer.carrierName,
+        phoneNumber: offer.phoneNumber,
+        contactExt: offer.extension,
+        contactEmail: offer.dispatchEmail,
+        contactName: offer.contactName,
       };
       addCarrierToDatabase(carrier);
     });
@@ -356,40 +355,40 @@ export default function Dashboard() {
       }
     }
 
-    function addLaneStopsToDataBase(quote_request_id) {
-      console.log(quote_request_id);
-      let lane_stops = [];
+    function addLaneStopsToDataBase(quoteRequestId) {
+      console.log(quoteRequestId);
+      let laneStops = [];
       event.origins.forEach((city) => {
-        lane_stops.push({
-          quote_request_id: quote_request_id,
-          city_id: city.city_id,
-          is_origin: city.is_origin,
+        laneStops.push({
+          quoteRequestId: quoteRequestId,
+          CityId: city.CityId,
+          isOrigin: city.isOrigin,
         });
       });
 
       event.destinations.forEach((city) => {
-        lane_stops.push({
-          quote_request_id: quote_request_id,
-          city_id: city.city_id,
-          is_origin: city.is_origin,
+        laneStops.push({
+          quoteRequestId: quoteRequestId,
+          CityId: city.CityId,
+          isOrigin: city.isOrigin,
         });
       });
 
-      lane_stops.forEach((lane_stop) => {
-        commitLaneStops(lane_stop);
-        lane_stops = [];
+      laneStops.forEach((laneStop) => {
+        commitLaneStops(laneStop);
+        laneStops = [];
       });
     }
 
-    async function commitLaneStops(lane_stop) {
+    async function commitLaneStops(laneStop) {
       try {
-        const response = await fetch("http://localhost:5000/lane_stops", {
+        const response = await fetch("http://localhost:5000/laneStops", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + localStorage.getItem("Access Token"),
           },
-          body: JSON.stringify(lane_stop),
+          body: JSON.stringify(laneStop),
         });
         const data = await response.json();
         console.log(data);
@@ -398,8 +397,8 @@ export default function Dashboard() {
       }
     }
 
-    function addHandlingUnitsToDataBase(quote_request_id) {
-      console.log(quote_request_id);
+    function addHandlingUnitsToDataBase(quoteRequestId) {
+      console.log(quoteRequestId);
       let handlingUnits = [];
 
       for (let i = 0; i < Object.keys(event.loadData).length; i++) {

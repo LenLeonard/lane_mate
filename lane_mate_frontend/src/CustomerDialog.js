@@ -57,9 +57,9 @@ export default function CustomerDialog({
   async function addNewCustomer(event) {
     console.log(event);
     //post a new customer to the database
-    const sales_rep_id = localStorage.getItem("userId");
+    const salesRepId = localStorage.getItem("userId");
     const newCustomer = {
-      sales_rep_id,
+      salesRepId,
       ...event,
     };
     try {

@@ -12,15 +12,15 @@ export default function DestinationCitySelectTEST({
   index,
 }) {
   const onCityChange = (event, values) => {
-    setInputValue(`${values.name}, ${values.state_province_name}`);
-    const destination_city_id = values.id;
+    setInputValue(`${values.name}, ${values.stateProvinceName}`);
+    const destinationCityId = values.id;
 
     const inputList = [...destinationIDs];
-    inputList[index].city_id = destination_city_id;
-    inputList[index].is_origin = false;
-    inputList[index].city_name = values.name;
-    inputList[index].state_province_name = values.state_province_name;
-    inputList[index].state_province_id = values.state_province_id;
+    inputList[index].cityId = destinationCityId;
+    inputList[index].isOrigin = false;
+    inputList[index].cityName = values.name;
+    inputList[index].stateProvinceName = values.stateProvinceName;
+    inputList[index].stateProvinceId = values.stateProvinceId;
     setDestinationIDs(inputList);
     setLaneStops({
       destinations: destinationIDs,
@@ -47,7 +47,7 @@ export default function DestinationCitySelectTEST({
       renderOption={(props, option) => {
         return (
           <li {...props} key={option.id}>
-            {option.name} , {option.state_province_name}
+            {option.name} , {option.stateProvinceName}
           </li>
         );
       }}

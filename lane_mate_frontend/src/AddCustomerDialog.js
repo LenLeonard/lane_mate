@@ -33,7 +33,7 @@ export default function AddCustomerDialog({
               city, and state/province.
             </DialogContentText>
             <Controller
-              name="company_name"
+              name="companyName"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -41,7 +41,7 @@ export default function AddCustomerDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="name"
+                  id="companyName"
                   label="Company Name"
                   type="outline"
                   variant="standard"
@@ -50,7 +50,7 @@ export default function AddCustomerDialog({
               )}
             />
             <Controller
-              name="primary_contact"
+              name="primaryContact"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -58,7 +58,7 @@ export default function AddCustomerDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="origin"
+                  id="primaryContact"
                   label="Primary Contact"
                   type="outline"
                   variant="standard"
@@ -66,7 +66,7 @@ export default function AddCustomerDialog({
               )}
             />
             <Controller
-              name="contact_email"
+              name="contactEmail"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -74,7 +74,7 @@ export default function AddCustomerDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="destination"
+                  id="contactEmail"
                   label="Contact Email"
                   type="outline"
                   variant="standard"
@@ -82,7 +82,7 @@ export default function AddCustomerDialog({
               )}
             />
             <Controller
-              name="contact_phone"
+              name="contactPhone"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -90,7 +90,7 @@ export default function AddCustomerDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="equipmentType"
+                  id="contactPhone"
                   label="Contact Phone"
                   type="outline"
                   variant="standard"
@@ -106,7 +106,7 @@ export default function AddCustomerDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="weight"
+                  id="city"
                   label="City"
                   type="outline"
                   variant="standard"
@@ -114,7 +114,7 @@ export default function AddCustomerDialog({
               )}
             />
             <Controller
-              name="state_province"
+              name="stateProvince"
               control={control}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -122,7 +122,7 @@ export default function AddCustomerDialog({
                   onChange={onChange}
                   autoFocus
                   margin="dense"
-                  id="state"
+                  id="stateProvince"
                   label="State/Province"
                   type="outline"
                   variant="standard"

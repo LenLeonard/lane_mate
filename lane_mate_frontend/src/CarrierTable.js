@@ -40,8 +40,8 @@ export default function CarrierTable({
         body: JSON.stringify(event),
       });
       const body = await response.json();
-      const carrier_id = body.id;
-      return carrier_id;
+      const carrierId = body.id;
+      return carrierId;
     } catch (err) {
       console.log(err);
     }
@@ -51,17 +51,17 @@ export default function CarrierTable({
     if (quoteRequestDefined === true) {
       setTableData([...tableData, event]);
       //add offer to offer table
-      //need to get quote_request_id from dashboard
-      //need to get carrier_id from database
-      addCarrier(event).then((carrier_id) => {
+      //need to get quoteRequestId from dashboard
+      //need to get carrierId from database
+      addCarrier(event).then((carrierId) => {
         fetch("http://localhost:5000/offers", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            quote_request_id: quoteRequestId,
-            carrier_id: carrier_id,
+            quoteRequestId: quoteRequestId,
+            carrierId: carrierId,
             rate: event.rate,
             notes: event.notes,
           }),
@@ -91,14 +91,14 @@ export default function CarrierTable({
             <TableBody>
               {rows.map((row) => (
                 <TableRow
-                  key={row.carrier_name}
+                  key={row.carrierName}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell align="left">{row.carrier_name}</TableCell>
+                  <TableCell align="left">{row.carrierName}</TableCell>
                   <TableCell align="right">{row.phone}</TableCell>
-                  <TableCell align="right">{row.contact_ext}</TableCell>
-                  <TableCell align="right">{row.contact_email}</TableCell>
-                  <TableCell align="right">{row.contact_name}</TableCell>
+                  <TableCell align="right">{row.contactExt}</TableCell>
+                  <TableCell align="right">{row.contactEmail}</TableCell>
+                  <TableCell align="right">{row.contactName}</TableCell>
                   <TableCell align="right">{row.rate}</TableCell>
                   <TableCell align="right">{row.notes}</TableCell>
                 </TableRow>

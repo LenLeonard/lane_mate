@@ -137,13 +137,11 @@ export default function OfferTableComponent({ rows, setRows }) {
                     onClick={() => deleteCarrier(row.id)}
                   ></DeleteOutlineOutlinedIcon>
                 </TableCell>
-                <CustomTableCell {...{ row, name: "carrier_name", onChange }} />
+                <CustomTableCell {...{ row, name: "carrierName", onChange }} />
                 <CustomTableCell {...{ row, name: "phone", onChange }} />
-                <CustomTableCell {...{ row, name: "contact_ext", onChange }} />
-                <CustomTableCell
-                  {...{ row, name: "contact_email", onChange }}
-                />
-                <CustomTableCell {...{ row, name: "contact_name", onChange }} />
+                <CustomTableCell {...{ row, name: "contactExt", onChange }} />
+                <CustomTableCell {...{ row, name: "contactEmail", onChange }} />
+                <CustomTableCell {...{ row, name: "contactName", onChange }} />
               </TableRow>
             ))}
           </TableBody>

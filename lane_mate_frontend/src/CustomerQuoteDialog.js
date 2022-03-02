@@ -41,7 +41,7 @@ export default function CustomerQuoteDialog({
 
   const getCustomers = async () => {
     //getCustomers is a function that returns a promise
-    const sales_rep_id = localStorage.getItem("userId");
+    const salesRepId = localStorage.getItem("userId");
     try {
       //try to get the customers from the database
       const response = await fetch("http://localhost:5000/customers/", {
@@ -68,9 +68,9 @@ export default function CustomerQuoteDialog({
   async function addNewCustomer(event) {
     console.log(event);
     //post a new customer to the database
-    const sales_rep_id = localStorage.getItem("userId");
+    const salesRepId = localStorage.getItem("userId");
     const newCustomer = {
-      sales_rep_id,
+      salesRepId,
       ...event,
     };
     try {

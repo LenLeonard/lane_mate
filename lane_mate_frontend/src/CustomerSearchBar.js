@@ -10,9 +10,9 @@ export default function CustomerSearchBar({ returnCustomer, customersProps }) {
     let customerId = "";
     let customerCompanyName = "";
     customers.forEach((customer) => {
-      if (customer.company_name === customerName) {
+      if (customer.companyName === customerName) {
         customerId = customer.id;
-        customerCompanyName = customer.company_name;
+        customerCompanyName = customer.companyName;
       }
 
       returnCustomer({ customerId, customerCompanyName });
@@ -25,7 +25,7 @@ export default function CustomerSearchBar({ returnCustomer, customersProps }) {
       freeSolo
       id="searchBar"
       disableClearable
-      options={customers.map((option) => option.company_name)}
+      options={customers.map((option) => option.companyName)}
       onChange={(event, value) => {
         returnCustomerId(value);
       }}

@@ -171,14 +171,12 @@ export default function TableComponent({ rows, setRows }) {
                   onClick={() => deleteCustomer(row.id)}
                 ></DeleteOutlineOutlinedIcon>
               </TableCell>
-              <CustomTableCell {...{ row, name: "company_name", onChange }} />
-              <CustomTableCell
-                {...{ row, name: "primary_contact", onChange }}
-              />
-              <CustomTableCell {...{ row, name: "contact_email", onChange }} />
-              <CustomTableCell {...{ row, name: "contact_phone", onChange }} />
+              <CustomTableCell {...{ row, name: "companyName", onChange }} />
+              <CustomTableCell {...{ row, name: "primaryContact", onChange }} />
+              <CustomTableCell {...{ row, name: "contactEmail", onChange }} />
+              <CustomTableCell {...{ row, name: "contactPhone", onChange }} />
               <CustomTableCell {...{ row, name: "city", onChange }} />
-              <CustomTableCell {...{ row, name: "state_province", onChange }} />
+              <CustomTableCell {...{ row, name: "stateProvince", onChange }} />
             </TableRow>
           ))}
         </TableBody>

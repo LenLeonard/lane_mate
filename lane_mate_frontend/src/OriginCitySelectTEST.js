@@ -11,15 +11,15 @@ export default function OriginCitySelectTEST({
   index,
 }) {
   const onCityChange = (event, values) => {
-    setInputValue(`${values.name}, ${values.state_province_name}`);
-    const origin_city_id = values.id;
+    setInputValue(`${values.name}, ${values.stateProvinceName}`);
+    const originCityId = values.id;
 
     const inputList = [...originIDs];
-    inputList[index].city_id = origin_city_id;
-    inputList[index].is_origin = true;
-    inputList[index].city_name = values.name;
-    inputList[index].state_province_name = values.state_province_name;
-    inputList[index].state_province_id = values.state_province_id;
+    inputList[index].cityId = originCityId;
+    inputList[index].isOrigin = true;
+    inputList[index].cityName = values.name;
+    inputList[index].stateProvinceName = values.stateProvinceName;
+    inputList[index].stateProvinceId = values.stateProvinceId;
     setOriginIDs(inputList);
     setLaneStops({
       origins: originIDs,
@@ -46,7 +46,7 @@ export default function OriginCitySelectTEST({
       renderOption={(props, option) => {
         return (
           <li {...props} key={option.id}>
-            {option.name} , {option.state_province_name}
+            {option.name} , {option.stateProvinceName}
           </li>
         );
       }}

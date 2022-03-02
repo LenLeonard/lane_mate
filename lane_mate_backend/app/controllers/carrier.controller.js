@@ -51,7 +51,9 @@ async function getAllCarriers(req, res) {
 async function deleteCarrier(req, res) {
   const { id } = req.params;
   const deletedCarrier = await deleteFromCarriersById(id);
-  res.json(deletedCarrier);
+
+  const deletedCarrierCamelCase = keysToCamel(deletedCarrier);
+  res.json(deletedCarrierCamelCase);
 }
 
 //update a carrier
@@ -74,5 +76,6 @@ async function putCarrier(req, res) {
     contact_name,
     user_id,
   });
-  res.json(updatedCarrier);
+  const updatedCarrierCamelCase = keysToCamel(updatedCarrier);
+  res.json(updatedCarrierCamelCase);
 }
