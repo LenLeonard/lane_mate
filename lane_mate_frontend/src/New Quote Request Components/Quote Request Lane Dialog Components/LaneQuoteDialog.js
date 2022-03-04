@@ -8,7 +8,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useForm, Controller } from "react-hook-form";
 
-import LaneStopInput from "./LaneStopInput";
+import LaneStopInput from "./Lane Quote Components/LaneStopInput";
 
 export default function LaneQuoteDialog({
   handleLaneQuoteDialogClose,

@@ -7,8 +7,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useForm, Controller } from "react-hook-form";
-import CustomerSearchBar from "./CustomerSearchBar";
-import AddQuoteCustomerDialog from "./AddQuoteCustomerDialog";
+import CustomerSearchBar from "./Customer Dialog Components/CustomerSearchBar";
+import AddQuoteCustomerDialog from "./Customer Dialog Components/AddQuoteCustomerDialog";
 import { useState } from "react";
 import { useEffect } from "react";
 

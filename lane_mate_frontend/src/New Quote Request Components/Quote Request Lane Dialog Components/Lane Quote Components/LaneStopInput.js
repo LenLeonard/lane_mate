@@ -2,8 +2,8 @@ import * as React from "react";
 import { useState } from "react";
 import ReactDOM from "react-dom";
 import { Autocomplete } from "@mui/material";
-import OriginCitySelectTEST from "./OriginCitySelectTEST";
-import DestinationCitySelectTEST from "./DestinationCitySelectTEST";
+import OriginCitySelect from "./City Select Components/OriginCitySelect";
+import DestinationCitySelect from "./City Select Components/DestinationCitySelect";
 import { useEffect } from "react";
 import {
   Container,
@@ -91,7 +91,7 @@ export default function LaneStopInput({ getLaneStops, cities }) {
             return (
               <>
                 <div key={i}>
-                  <OriginCitySelectTEST
+                  <OriginCitySelect
                     cities={cities}
                     setOriginIDs={setOriginIDs}
                     index={i}
@@ -123,7 +123,7 @@ export default function LaneStopInput({ getLaneStops, cities }) {
             return (
               <>
                 <div key={j}>
-                  <DestinationCitySelectTEST
+                  <DestinationCitySelect
                     cities={cities}
                     setDestinationIDs={setDestinationIDs}
                     index={j}

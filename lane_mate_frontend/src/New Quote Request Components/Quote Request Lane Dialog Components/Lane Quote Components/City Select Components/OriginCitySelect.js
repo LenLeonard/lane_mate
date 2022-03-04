@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 
-export default function OriginCitySelectTEST({
+export default function OriginCitySelect({
   cities,
   setLaneStops,
   originIDs,

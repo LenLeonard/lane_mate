@@ -1,18 +1,18 @@
 import "./App.css";
 
 //import Dashboard from "./Dashboard";
-import Dashboard from "./newDashboard";
-import SignInSide from "./SignInSide";
+import Dashboard from "./Dashboard";
+import SignInSide from "./Login Components/SignInSide";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SignUp from "./SignUp";
+import SignUp from "./Login Components/SignUp";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<SignInSide />} />
         <Route path="/signUp" element={<SignUp />} />
+        <Route path="/" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );

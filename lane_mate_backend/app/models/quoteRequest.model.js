@@ -23,7 +23,7 @@ async function insertQuoteRequest({ salesRepId, customerId }) {
 
 async function selectAllQuoteRequests() {
   try {
-    const allQuoteRequests = await pool.query("SELECT * FROM quoteRequests "); //returns an array of objects
+    const allQuoteRequests = await pool.query("SELECT * FROM quote_requests "); //returns an array of objects
     return allQuoteRequests.rows;
   } catch (err) {
     console.error("selectAllQuoteRequests error: " + err.message);

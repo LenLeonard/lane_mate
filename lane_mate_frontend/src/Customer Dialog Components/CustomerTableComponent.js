@@ -14,7 +14,7 @@ import EditIcon from "@mui/icons-material/EditOutlined";
 import DoneIcon from "@mui/icons-material/DoneAllTwoTone";
 import RevertIcon from "@mui/icons-material/NotInterestedOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import CustomTableCell from "./CustomTableCell";
+import CustomTableCell from "../Shared Components/CustomTableCell";
 
 const useStyles = makeStyles((theme) => ({
   root: {
