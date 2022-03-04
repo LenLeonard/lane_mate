@@ -47,7 +47,7 @@ export default function CarrierForm({
 
       createNewEntryOnSubmit(event);
       reset();
-      setFocus("carrier_name");
+      setFocus("carrierName");
     } else {
       handleAlertModalOpen();
     }

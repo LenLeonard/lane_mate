@@ -8,15 +8,15 @@ const validateAccessToken = accessToken.validateAccessToken;
 
 module.exports = (app) => {
   // POST new laneStop
-  app.post("/lane_stops", validateAccessToken, postLaneStop);
+  app.post("/laneStops", validateAccessToken, postLaneStop);
 
   // GET all lane_stops
 
-  app.get("/lane_stops", validateAccessToken, getLaneStops);
+  app.get("/laneStops", validateAccessToken, getLaneStops);
 
   // DELETE a laneStop by id
-  app.delete("/lane_stops/:id", validateAccessToken, deleteLaneStop);
+  app.delete("/laneStops/:id", validateAccessToken, deleteLaneStop);
 
   // PUT a laneStop b id
-  app.put("/lane_stops/:id", validateAccessToken, putLaneStop);
+  app.put("/laneStops/:id", validateAccessToken, putLaneStop);
 };

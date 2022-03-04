@@ -33,9 +33,10 @@ export default function CarrierTable({
   async function addCarrier(event) {
     try {
       const response = await fetch("http://localhost:5000/carriers", {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("Access Token")}`,
         },
         body: JSON.stringify(event),
       });
@@ -58,6 +59,7 @@ export default function CarrierTable({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("Access Token")}`,
           },
           body: JSON.stringify({
             quoteRequestId: quoteRequestId,

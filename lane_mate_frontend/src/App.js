@@ -1,7 +1,7 @@
 import "./App.css";
 
-import Dashboard from "./Dashboard";
-
+//import Dashboard from "./Dashboard";
+import Dashboard from "./newDashboard";
 import SignInSide from "./SignInSide";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignUp from "./SignUp";

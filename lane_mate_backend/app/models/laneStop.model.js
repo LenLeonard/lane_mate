@@ -13,6 +13,7 @@ async function insertLaneStop({ cityId, isOrigin, quoteRequestId }) {
       "INSERT INTO lane_stops (city_id, is_origin, quote_request_id) VALUES ($1, $2, $3) RETURNING *",
       [cityId, isOrigin, quoteRequestId]
     );
+    return laneStop.rows[0];
   } catch (err) {
     console.error("lane_stop post " + err.message);
   }
@@ -31,22 +32,11 @@ async function selectAllLaneStops() {
 
 //put/update a laneStop in the database
 
-async function updateLaneStop(
-  id,
-  { laneStop_name, phone, contact_ext, contact_email, contact_name, user_id }
-) {
+async function updateLaneStop(id, { cityId, isOrigin, quoteRequestId }) {
   try {
     const newLaneStop = await pool.query(
       "UPDATE lane_stops SET laneStop_name = $1, phone = $2, contact_ext = $3, contact_email = $4, contact_name = $5, user_id = $6 WHERE id = $7 RETURNING *",
-      [
-        laneStop_name,
-        phone,
-        contact_ext,
-        contact_email,
-        contact_name,
-        user_id,
-        id,
-      ]
+      [cityId, isOrigin, quoteRequestId]
     );
     return newLaneStop.rows[0];
   } catch (err) {

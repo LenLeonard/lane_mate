@@ -2,8 +2,9 @@ const userModel = require("../models/user.model");
 
 const insertUser = userModel.insertUser;
 const selectAllUsers = userModel.selectAllUsers;
-const deleteFromUsersById = userModel.deleteFromUsersById;
-const updateUser = userModel.updateUser;
+const deleteFromUsersById = userModel.deleteFromU;
+const snakeToCamel = require("../utils/snakeToCamel");
+const keysToCamel = snakeToCamel.keysToCamel;
 
 module.exports = { getAllUsers, postUser, deleteUser, putUser };
 
@@ -19,15 +20,19 @@ async function postUser(req, res) {
     password,
   });
   //send response
-  res.json(newUser);
+  const camelUser = keysToCamel(newUser);
+  res.json(camelUser);
 }
 
 //get all users
 async function getAllUsers(req, res) {
   try {
     const allUsers = await selectAllUsers();
+    const allUsersCamelCase = allUsers.map((user) => {
+      return keysToCamel(user);
+    });
 
-    res.json(allUsers);
+    res.json(allUsersCamelCase);
   } catch (error) {
     console.log(error);
   }
@@ -37,7 +42,8 @@ async function getAllUsers(req, res) {
 async function deleteUser(req, res) {
   const { id } = req.params;
   const deletedUser = await deleteFromUsersById(id);
-  res.json(deletedUser);
+  const deletedUserCamelCase = keysToCamel(deletedUser);
+  res.json(deletedUserCamelCase);
 }
 
 //update a user
@@ -51,5 +57,6 @@ async function putUser(req, res) {
     lastName,
     password,
   });
-  res.json(updatedUser);
+  const updatedUserCamelCase = keysToCamel(updatedUser);
+  res.json(updatedUserCamelCase);
 }

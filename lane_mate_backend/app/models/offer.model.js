@@ -10,7 +10,7 @@ module.exports = {
 async function insertOffer({ quoteRequestId, carrierId, rate, notes }) {
   try {
     const newOffer = await pool.query(
-      "INSERT INTO offers (qute_request_id, carrier_id, rate, notes) VALUES ($1, $2, $3, $4) RETURNING *",
+      "INSERT INTO offers (quote_request_id, carrier_id, rate, notes) VALUES ($1, $2, $3, $4) RETURNING *",
       [quoteRequestId, carrierId, rate, notes]
     );
   } catch (err) {
@@ -34,7 +34,7 @@ async function selectAllOffers() {
 async function updateOffer(id, { quoteRequestId, carrierId, rate, notes }) {
   try {
     const newOffer = await pool.query(
-      "UPDATE offers SET qute_request_id = $1, carrier_id = $2, rate = $3, notes = $4 WHERE id = $5 RETURNING *",
+      "UPDATE offers SET quote_request_id = $1, carrier_id = $2, rate = $3, notes = $4 WHERE id = $5 RETURNING *",
       [quoteRequestId, carrierId, rate, notes]
     );
     return newOffer.rows[0];

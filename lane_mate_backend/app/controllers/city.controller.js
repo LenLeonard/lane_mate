@@ -4,6 +4,8 @@ const insertCity = cityModel.insertCity;
 const selectAllCities = cityModel.selectAllCities;
 const deleteFromCitiesById = cityModel.deleteFromCitiesById;
 const updateCity = cityModel.updateCity;
+const snakeToCamel = require("../utils/snakeToCamel");
+const keysToCamel = snakeToCamel.keysToCamel;
 
 async function postCity(req, res) {
   const { name, stateProvinceId, stateProvinceName } = req.body;
@@ -16,15 +18,19 @@ async function postCity(req, res) {
     stateProvinceName,
   });
   //send response
-  res.json(newCity);
+  const newCityCamelCase = keysToCamel(newCity);
+  res.json(newCityCamelCase);
 }
 
 //get all citys
 async function getAllCities(req, res) {
   try {
     const allCities = await selectAllCities();
+    const allCitiesCamelCase = allCities.map((city) => {
+      return keysToCamel(city);
+    });
 
-    res.json(allCities);
+    res.json(allCitiesCamelCase);
   } catch (error) {
     console.log(error);
   }
@@ -34,7 +40,8 @@ async function getAllCities(req, res) {
 async function deleteCity(req, res) {
   const { id } = req.params;
   const deletedCity = await deleteFromCitiesById(id);
-  res.json(deletedCity);
+  const deletedCityCamelCase = keysToCamel(deletedCity);
+  res.json(deletedCityCamelCase);
 }
 
 //update a city
@@ -47,6 +54,7 @@ async function putCity(req, res) {
     stateProvinceId,
     stateProvinceName,
   });
-  res.json(updatedCity);
+  const updatedCityCamelCase = keysToCamel(updatedCity);
+  res.json(updatedCityCamelCase);
 }
 module.exports = { getAllCities, postCity, deleteCity, putCity };

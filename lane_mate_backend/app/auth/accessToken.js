@@ -17,7 +17,7 @@ const validateAccessToken = (req, res, next) => {
 
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "30m",
+    expiresIn: "15m",
   });
 };
 

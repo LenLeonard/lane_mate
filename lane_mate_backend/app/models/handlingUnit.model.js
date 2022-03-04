@@ -8,27 +8,28 @@ module.exports = {
 };
 
 async function insertHandlingUnit({
-  quote_request_id,
+  quoteRequestId,
   type,
-  weight_lbs,
-  length_inches,
-  width_inches,
-  height_inches,
+  weightLbs,
+  lengthInches,
+  widthInches,
+  heightInches,
   quantity,
 }) {
   try {
     const handlingUnit = await pool.query(
       "INSERT INTO handling_units (quote_request_id, type, weight_lbs, length_inches, width_inches, height_inches, quantity) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
       [
-        quote_request_id,
+        quoteRequestId,
         type,
-        weight_lbs,
-        length_inches,
-        width_inches,
-        height_inches,
+        weightLbs,
+        lengthInches,
+        widthInches,
+        heightInches,
         quantity,
       ]
     );
+    return handlingUnit.rows;
   } catch (err) {
     console.error("handlingUnit.model " + err.message);
   }
@@ -47,32 +48,30 @@ async function selectAllHandlingUnits() {
 
 //put/update a handlingUnit in the database
 
-async function updateHandlingUnit(
-  id,
-  {
-    quote_request_id,
-    type,
-    weight_lbs,
-    length_inches,
-    width_inches,
-    height_inches,
-    quantity,
-  }
-) {
+async function updateHandlingUnit({
+  quoteRequestId,
+  type,
+  weightLbs,
+  lengthInches,
+  widthInches,
+  heightInches,
+  quantity,
+}) {
   try {
     const newHandlingUnit = await pool.query(
-      "UPDATE handling_units SET quote_request_id = $1, type = $2, weight_lbs = $3, length_inches = $4, width_inches = $5, height_inches = $6, quantity = $7 WHERE id = $8",
+      "UPDATE handling_units SET quote_request_id = $1, type = $2, weight_lbs = $3, length_inches = $4, width_inches = $5, height_inches = $6, quantity = $7, RETURNING *",
       [
-        quote_request_id,
+        quoteRequestId,
         type,
-        weight_lbs,
-        length_inches,
-        width_inches,
-        height_inches,
+        weightLbs,
+        lengthInches,
+        widthInches,
+        heightInches,
         quantity,
       ]
     );
-    return newHandlingUnit.rows[0];
+    console.log("model" + newHandlingUnit.rows);
+    return newHandlingUnit.rows;
   } catch (err) {
     console.error("putHandlingUnit error: " + err.message);
   }

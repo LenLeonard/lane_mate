@@ -42,7 +42,7 @@ export default function CarrierDialog({
       });
 
       const jsonData = await response.json(); //convert the response to json
-      console.log(jsonData);
+
       setRows(jsonData);
       setCarriers(jsonData);
     } catch (error) {

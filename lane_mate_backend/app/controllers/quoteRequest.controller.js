@@ -17,12 +17,13 @@ async function postQuoteRequest(req, res) {
   const { salesRepId, customerId } = req.body;
   console.log(req.body);
 
-  //create new carrier
+  //create new quoteRequest
   const newQuoteRequest = await insertQuoteRequest({
     salesRepId,
     customerId,
   });
   //send response
+  console.log(newQuoteRequest);
   res.json(newQuoteRequest);
 }
 

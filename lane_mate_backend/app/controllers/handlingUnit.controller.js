@@ -5,6 +5,8 @@ const selectAllHandlingUnits = handlingUnitModel.selectAllHandlingUnits;
 const deleteFromHandlingUnitsById =
   handlingUnitModel.deleteFromHandlingUnitsById;
 const updateHandlingUnit = handlingUnitModel.updateHandlingUnit;
+const snakeToCamel = require("../utils/snakeToCamel");
+const keysToCamel = snakeToCamel.keysToCamel;
 
 module.exports = {
   getAllHandlingUnits,
@@ -15,7 +17,7 @@ module.exports = {
 
 async function postHandlingUnit(req, res) {
   const {
-    quoteRequestId: quoteRequestId,
+    quoteRequestId,
     type,
     weightLbs,
     lengthInches,
@@ -23,7 +25,6 @@ async function postHandlingUnit(req, res) {
     heightInches,
     quantity,
   } = req.body;
-  const user = req.user;
 
   //create new handlingUnit
   const newHandlingUnit = await insertHandlingUnit({
@@ -36,15 +37,20 @@ async function postHandlingUnit(req, res) {
     quantity,
   });
   //send response
-  res.json(newHandlingUnit);
+  const camelHandlingUnit = keysToCamel(newHandlingUnit);
+
+  res.json(camelHandlingUnit);
 }
 
 //get all handlingUnits
 async function getAllHandlingUnits(req, res) {
   try {
     const allHandlingUnits = await selectAllHandlingUnits();
+    const allHandlingUnitsCamelCase = allHandlingUnits.map((handlingUnit) => {
+      return keysToCamel(handlingUnit);
+    });
 
-    res.json(allHandlingUnits);
+    res.json(allHandlingUnitsCamelCase);
   } catch (error) {
     console.log(error);
   }
@@ -54,7 +60,8 @@ async function getAllHandlingUnits(req, res) {
 async function deleteHandlingUnit(req, res) {
   const { id } = req.params;
   const deletedHandlingUnit = await deleteFromHandlingUnitsById(id);
-  res.json(deletedHandlingUnit);
+  const camelHandlingUnit = keysToCamel(deletedHandlingUnit);
+  res.json(camelHandlingUnit);
 }
 
 //update a handlingUnit
@@ -79,5 +86,6 @@ async function putHandlingUnit(req, res) {
     heightInches,
     quantity,
   });
-  res.json(updatedHandlingUnit);
+  const camelHandlingUnit = keysToCamel(updatedHandlingUnit);
+  res.json(camelHandlingUnit);
 }

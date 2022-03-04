@@ -4,11 +4,10 @@ const accessToken = require("../auth/accessToken");
 const generateAccessToken = accessToken.generateAccessToken;
 const refreshToken = require("../auth/refreshToken");
 const generateRefreshToken = refreshToken.generateRefreshToken;
-
-const refreshTokens = refreshToken.refreshTokens;
-
+const refreshTokensFile = require("../auth/refreshTokens");
 const selectLogin = loginModel.selectLogin;
 
+let refreshTokens = refreshTokensFile.refreshTokens;
 module.exports = { postLogin };
 
 const verifyPassword = async (password, hashedPassword) => {
@@ -48,7 +47,8 @@ async function postLogin(req, res) {
           userEmail: newUser[0].email,
           userId: newUser[0].id,
         });
-        refreshTokens.push(refreshToken);
+
+        console.log(refreshTokens);
       } else {
         res.status(400).send("Invalid password");
       }

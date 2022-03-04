@@ -53,9 +53,8 @@ export default function CustomerQuoteDialog({
       });
 
       const jsonData = await response.json(); //convert the response to json
-      console.log(jsonData);
+
       setCustomers(jsonData);
-      console.log(customers);
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +65,6 @@ export default function CustomerQuoteDialog({
   }, []);
 
   async function addNewCustomer(event) {
-    console.log(event);
     //post a new customer to the database
     const salesRepId = localStorage.getItem("userId");
     const newCustomer = {

@@ -4,6 +4,8 @@ const insertOffer = offerModel.insertOffer;
 const selectAllOffers = offerModel.selectAllOffers;
 const deleteFromOffersById = offerModel.deleteFromOffersById;
 const updateOffer = offerModel.updateOffer;
+const snakeToCamel = require("../utils/snakeToCamel");
+const keysToCamel = snakeToCamel.keysToCamel;
 
 module.exports = { getAllOffers, postOffer, deleteOffer, putOffer };
 
@@ -19,15 +21,18 @@ async function postOffer(req, res) {
     notes,
   });
   //send response
-  res.json(newOffer);
+  const camelOffer = keysToCamel(newOffer);
+  res.json(camelOffer);
 }
 
 //get all offers
 async function getAllOffers(req, res) {
   try {
     const allOffers = await selectAllOffers();
-
-    res.json(allOffers);
+    const allOffersCamelCase = allOffers.map((offer) => {
+      return keysToCamel(offer);
+    });
+    res.json(allOffersCamelCase);
   } catch (error) {
     console.log(error);
   }
@@ -37,7 +42,8 @@ async function getAllOffers(req, res) {
 async function deleteOffer(req, res) {
   const { id } = req.params;
   const deletedOffer = await deleteFromOffersById(id);
-  res.json(deletedOffer);
+  const camelDeletedOffer = keysToCamel(deletedOffer);
+  res.json(camelDeletedOffer);
 }
 
 //update a carrier
@@ -51,5 +57,6 @@ async function putOffer(req, res) {
     rate,
     notes,
   });
-  res.json(updatedOffer);
+  const camelUpdatedOffer = keysToCamel(updatedOffer);
+  res.json(camelUpdatedOffer);
 }

@@ -13,6 +13,7 @@ async function insertQuoteRequest({ salesRepId, customerId }) {
       "INSERT INTO quote_requests (sales_rep_id, customer_id) VALUES ($1, $2) RETURNING *",
       [salesRepId, customerId]
     );
+    return newQuoteRequest.rows[0];
   } catch (err) {
     console.error("quoteRequest.model " + err.message);
   }
