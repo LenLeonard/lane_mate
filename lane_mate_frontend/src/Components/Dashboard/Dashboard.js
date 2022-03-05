@@ -1,20 +1,15 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 
-import { useState, useEffect } from "react";
-import QuoteCard from "./QuoteCard";
+import { useState } from "react";
+import QuoteCard from "./Quote Request Display/QuoteCard";
 import { CardActions } from "@mui/material";
 import { useForm } from "react-hook-form";
-import CarrierTable from "./CarrierTable";
-import SearchBar from "./SearchBar";
-import { Alert } from "@mui/material";
-import { Box } from "@mui/material";
-import Modal from "@mui/material/Modal";
+import CarrierTable from "./Offer Table/CarrierTable";
 
-import CarrierDialog from "./Carrier Dialog Components/CarrierDialog";
-import QuoteRequestTableDialog from "./QuoteRequestTableDialog";
-import CustomerDialog from "./Customer Dialog Components/CustomerDialog";
-import QuoteRequestComponent from "./New Quote Request Components/QuoteRequestComponent";
+import CarrierDialog from "./Carrier Dialog/CarrierDialog";
+import QuoteRequestTableDialog from "./Quote Request Dialog/QuoteRequestTableDialog";
+import CustomerDialog from "./Customer Dialog/CustomerDialog";
+import QuoteRequestComponent from "./New Quote Request/QuoteRequestComponent";
 
 //Dashboard is the main component of the application.
 //It contains the QuoteCard, SearchBar, and CarrierTable components

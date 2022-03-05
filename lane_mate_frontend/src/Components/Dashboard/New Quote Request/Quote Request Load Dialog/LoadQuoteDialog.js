@@ -7,9 +7,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useForm, Controller } from "react-hook-form";
-import HandlingUnitInput from "./Load Quote Components/HandlingUnitInput";
+import HandlingUnitInput from "./Load Quote/HandlingUnitInput";
 import { useEffect } from "react";
-import EquipmentTypeInput from "./Load Quote Components/EquipmentTypeInput";
+import EquipmentTypeInput from "./Load Quote/EquipmentTypeInput";
 
 export default function LoadQuoteDialog({
   handleLoadQuoteDialogClose,

@@ -1,8 +1,8 @@
 import * as React from "react";
-import CustomerQuoteDialog from "./Quote Request Customer Dialog Components/CustomerQuoteDialog";
+import CustomerQuoteDialog from "./Quote Request Customer Dialog/CustomerQuoteDialog";
 import { useState } from "react";
-import LaneQuoteDialog from "./Quote Request Lane Dialog Components/LaneQuoteDialog";
-import LoadQuoteDialog from "./Quote Request Load Dialog Components/LoadQuoteDialog";
+import LaneQuoteDialog from "./Quote Request Lane Dialog/LaneQuoteDialog";
+import LoadQuoteDialog from "./Quote Request Load Dialog/LoadQuoteDialog";
 
 import { useEffect } from "react";
 
