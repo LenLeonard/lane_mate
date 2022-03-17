@@ -4,17 +4,14 @@ const accessToken = require("../auth/accessToken");
 const generateAccessToken = accessToken.generateAccessToken;
 const refreshToken = require("../auth/refreshToken");
 const generateRefreshToken = refreshToken.generateRefreshToken;
-const refreshTokensFile = require("../auth/refreshTokens");
-const selectLogin = loginModel.selectLogin;
 
-let refreshTokens = refreshTokensFile.refreshTokens;
-module.exports = { postLogin };
+const selectLogin = loginModel.selectLogin;
 
 const verifyPassword = async (password, hashedPassword) => {
   return await bcrypt.compare(password, hashedPassword);
 };
 
-async function postLogin(req, res) {
+const postLogin = (refreshTokens) => async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -56,4 +53,5 @@ async function postLogin(req, res) {
   } catch (err) {
     console.error("postLogin error: " + err.message);
   }
-}
+};
+module.exports = { postLogin };

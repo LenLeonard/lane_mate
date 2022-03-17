@@ -29,8 +29,6 @@ async function insertCustomer({
         stateProvince,
       ]
     );
-
-    console.log(newCustomer.rows[0]);
   } catch (err) {
     console.error("customer.model " + err.message);
   }
@@ -40,12 +38,11 @@ async function insertCustomer({
 
 async function selectAllCustomers(sales_rep_id) {
   try {
-    console.log(sales_rep_id);
     const allCustomers = await pool.query(
       "SELECT * FROM customers WHERE sales_rep_id = $1",
       [sales_rep_id]
     );
-    console.log(allCustomers.rows);
+
     return allCustomers.rows;
   } catch (err) {
     console.error(err.message);

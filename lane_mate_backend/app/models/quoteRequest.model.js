@@ -7,11 +7,16 @@ module.exports = {
   updateQuoteRequest,
 };
 
-async function insertQuoteRequest({ salesRepId, customerId }) {
+async function insertQuoteRequest({
+  salesRepId,
+  customerId,
+  date,
+  equipmentType,
+}) {
   try {
     const newQuoteRequest = await pool.query(
-      "INSERT INTO quote_requests (sales_rep_id, customer_id) VALUES ($1, $2) RETURNING *",
-      [salesRepId, customerId]
+      "INSERT INTO quote_requests (sales_rep_id, customer_id, date, equipment_type) VALUES ($1, $2, $3, $4) RETURNING *",
+      [salesRepId, customerId, date, equipmentType]
     );
     return newQuoteRequest.rows[0];
   } catch (err) {
@@ -23,7 +28,15 @@ async function insertQuoteRequest({ salesRepId, customerId }) {
 
 async function selectAllQuoteRequests() {
   try {
-    const allQuoteRequests = await pool.query("SELECT * FROM quote_requests "); //returns an array of objects
+    const allQuoteRequests = await pool.query(`
+SELECT quote_requests.id, quote_requests.date, quote_requests.equipment_type, customers.company_name, origin.name AS origin_name, destination.name AS destination_name from quote_requests 
+INNER JOIN customers ON (quote_requests.customer_id = customers.id)
+INNER JOIN (
+	SELECT * FROM lane_stops INNER JOIN cities ON (lane_stops.city_id = cities.id) WHERE is_origin
+) AS origin ON (quote_requests.id = origin.quote_request_id)
+INNER JOIN (
+	SELECT * from lane_stops INNER JOIN cities ON (lane_stops.city_id = cities.id) WHERE is_origin = false
+) AS destination ON (quote_requests.id = destination.quote_request_id)`); //returns an array of objects
     return allQuoteRequests.rows;
   } catch (err) {
     console.error("selectAllQuoteRequests error: " + err.message);

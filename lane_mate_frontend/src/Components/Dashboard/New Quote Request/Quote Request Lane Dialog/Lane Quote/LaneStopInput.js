@@ -89,66 +89,62 @@ export default function LaneStopInput({ getLaneStops, cities }) {
         <CardContent>
           {originIDs.map((x, i) => {
             return (
-              <>
-                <div key={i}>
-                  <OriginCitySelect
-                    cities={cities}
-                    setOriginIDs={setOriginIDs}
-                    index={i}
-                    originIDs={originIDs}
-                    setLaneStops={setLaneStops}
-                  />
+              <div key={i}>
+                <OriginCitySelect
+                  cities={cities}
+                  setOriginIDs={setOriginIDs}
+                  index={i}
+                  originIDs={originIDs}
+                  setLaneStops={setLaneStops}
+                />
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleOriginAddClick}
+                >
+                  Add Origin
+                </Button>
+
+                {i > 0 && (
                   <Button
                     variant="outlined"
-                    color="primary"
-                    onClick={handleOriginAddClick}
+                    color="secondary"
+                    onClick={(e) => handleOriginRemoveClick(e, i)}
                   >
-                    Add Origin
+                    Delete
                   </Button>
-
-                  {i > 0 && (
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={(e) => handleOriginRemoveClick(e, i)}
-                    >
-                      Delete
-                    </Button>
-                  )}
-                </div>
-              </>
+                )}
+              </div>
             );
           })}
           {destinationIDs.map((x, j) => {
             return (
-              <>
-                <div key={j}>
-                  <DestinationCitySelect
-                    cities={cities}
-                    setDestinationIDs={setDestinationIDs}
-                    index={j}
-                    destinationIDs={destinationIDs}
-                    setLaneStops={setLaneStops}
-                  />
+              <div key={j}>
+                <DestinationCitySelect
+                  cities={cities}
+                  setDestinationIDs={setDestinationIDs}
+                  index={j}
+                  destinationIDs={destinationIDs}
+                  setLaneStops={setLaneStops}
+                />
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleDestinationAddClick}
+                >
+                  Add Destination
+                </Button>
+
+                {j > 0 && (
                   <Button
                     variant="outlined"
-                    color="primary"
-                    onClick={handleDestinationAddClick}
+                    color="secondary"
+                    onClick={(e) => handleDestinationRemoveClick(e, j)}
                   >
-                    Add Destination
+                    Delete
                   </Button>
-
-                  {j > 0 && (
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={(e) => handleDestinationRemoveClick(e, j)}
-                    >
-                      Delete
-                    </Button>
-                  )}
-                </div>
-              </>
+                )}
+              </div>
             );
           })}
         </CardContent>

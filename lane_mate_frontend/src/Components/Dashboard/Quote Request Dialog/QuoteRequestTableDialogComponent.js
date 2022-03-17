@@ -120,7 +120,7 @@ export default function QuoteRequestTableDialogComponent({ rows, setRows }) {
       );
       const jsonData = await response.json();
       console.log(jsonData);
-      setRows(rows.filter((row) => row.id !== id)); //removes the identified quote request from the table without reloading the page
+      setRows(rows.filter((row) => row.id !== id)); //removes the quoterequestidentified quote request from the table without reloading the page
     } catch (error) {
       console.log(error);
     }
@@ -133,12 +133,13 @@ export default function QuoteRequestTableDialogComponent({ rows, setRows }) {
           <TableRow>
             <TableCell align="left" />
             <TableCell align="left" />
+            <TableCell align="left">Quote Request Id</TableCell>
             <TableCell align="left">Customer</TableCell>
             <TableCell align="left">Date</TableCell>
             <TableCell align="left">Origin</TableCell>
             <TableCell align="left">Destination</TableCell>
             <TableCell align="left">Equipment</TableCell>
-            <TableCell align="left">Feet</TableCell>
+
             <TableCell align="left">See More Details</TableCell>
             <TableCell align="left">See Offers</TableCell>
             <TableCell align="left">View In Dashboard</TableCell>
@@ -177,12 +178,14 @@ export default function QuoteRequestTableDialogComponent({ rows, setRows }) {
                   onClick={() => deleteQuoteRequest(row.id)}
                 ></DeleteOutlineOutlinedIcon>
               </TableCell>
+              <CustomTableCell {...{ row, name: "id", onChange }} />
               <CustomTableCell {...{ row, name: "companyName", onChange }} />
-              <CustomTableCell {...{ row, name: "primaryContact", onChange }} />
-              <CustomTableCell {...{ row, name: "contactEmail", onChange }} />
-              <CustomTableCell {...{ row, name: "contactPhone", onChange }} />
-              <CustomTableCell {...{ row, name: "city", onChange }} />
-              <CustomTableCell {...{ row, name: "stateProvince", onChange }} />
+              <CustomTableCell {...{ row, name: "row.date", onChange }} />
+              <CustomTableCell {...{ row, name: "originName", onChange }} />
+              <CustomTableCell
+                {...{ row, name: "destinationName", onChange }}
+              />
+              <CustomTableCell {...{ row, name: "equipmentType", onChange }} />
             </TableRow>
           ))}
         </TableBody>

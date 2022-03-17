@@ -20,12 +20,12 @@ export default function QuoteRequestTableDialog({
 
   const [rows, setRows] = useState([
     {
-      quoteRequestId: 1,
-      customer: "John Doe",
-      origin: "New York",
-      destination: "Los Angeles",
-      equipment: "Truck",
-      feet: "1000",
+      id: "test",
+      date: "test",
+      equipmentType: "test",
+      companyName: "test",
+      originName: "test",
+      destinationName: "test",
     },
   ]);
 
@@ -44,14 +44,17 @@ export default function QuoteRequestTableDialog({
 
       const jsonData = await response.json(); //convert the response to json
 
-      setQuoteRequests(jsonData);
+      return jsonData;
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getQuoteRequests();
+    getQuoteRequests().then((jsonData) => {
+      console.log(jsonData);
+      setRows(jsonData);
+    });
   }, []);
 
   const user = localStorage.getItem("userName");
@@ -66,6 +69,7 @@ export default function QuoteRequestTableDialog({
       >
         <DialogTitle>{user}'s QuoteRequests</DialogTitle>
         <DialogContent dividers style={{ height: "200px" }}>
+          <p>{JSON.stringify(rows)}</p>
           <div style={{ display: "flex" }}>
             <QuoteRequestTableDialogComponent rows={rows} setRows={setRows} />
           </div>

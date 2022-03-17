@@ -301,6 +301,8 @@ export default function Dashboard() {
     const newQuoteRequest = {
       salesRepId: localStorage.getItem("userId"),
       customerId: event.customerId,
+      date: new Date().toLocaleDateString("en-CA"),
+      equipmentType: event.equipmentData[0].equipmentType,
     };
 
     async function createNewQuoteRequest() {

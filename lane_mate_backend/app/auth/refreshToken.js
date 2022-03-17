@@ -2,11 +2,7 @@ const jwt = require("jsonwebtoken");
 const accessToken = require("../auth/accessToken");
 const generateAccessToken = accessToken.generateAccessToken;
 
-const refreshTokensFile = require("../auth/refreshTokens");
-
-let refreshTokens = refreshTokensFile.refreshTokens;
-
-const validateRefreshToken = (req, res) => {
+const validateRefreshToken = (refreshTokens) => (req, res) => {
   const refreshToken = req.body.refreshToken;
 
   if (refreshToken == null) return res.sendStatus(401);

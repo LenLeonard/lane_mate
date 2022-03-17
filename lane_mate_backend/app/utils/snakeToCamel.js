@@ -11,7 +11,7 @@ const isObject = function (obj) {
 };
 
 function keysToCamel(obj) {
-  if (isObject(obj)) {
+  if (isObject(obj) && !obj instanceof Date) {
     const n = {};
 
     Object.keys(obj).forEach((k) => {
