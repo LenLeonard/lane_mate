@@ -9,6 +9,9 @@ import TableRow from "@material-ui/core/TableRow";
 
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import PreviewIcon from "@mui/icons-material/Preview";
 
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DoneIcon from "@mui/icons-material/DoneAllTwoTone";
@@ -180,12 +183,21 @@ export default function QuoteRequestTableDialogComponent({ rows, setRows }) {
               </TableCell>
               <CustomTableCell {...{ row, name: "id", onChange }} />
               <CustomTableCell {...{ row, name: "companyName", onChange }} />
-              <CustomTableCell {...{ row, name: "row.date", onChange }} />
+              <CustomTableCell {...{ row, name: "date", onChange }} />
               <CustomTableCell {...{ row, name: "originName", onChange }} />
               <CustomTableCell
                 {...{ row, name: "destinationName", onChange }}
               />
               <CustomTableCell {...{ row, name: "equipmentType", onChange }} />
+              <TableCell>
+                <FactCheckIcon></FactCheckIcon>
+              </TableCell>
+              <TableCell>
+                <AttachMoneyIcon></AttachMoneyIcon>
+              </TableCell>
+              <TableCell>
+                <PreviewIcon></PreviewIcon>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

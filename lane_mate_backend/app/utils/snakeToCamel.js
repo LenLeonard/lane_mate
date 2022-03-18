@@ -6,16 +6,24 @@ const toCamel = (str) => {
 
 const isObject = function (obj) {
   return (
-    obj === Object(obj) && !Array.isArray(obj) && typeof obj !== "function"
+    obj === Object(obj) &&
+    !Array.isArray(obj) &&
+    typeof obj !== "function" &&
+    !(obj instanceof Date)
   );
 };
 
 function keysToCamel(obj) {
-  if (isObject(obj) && !obj instanceof Date) {
+  if (isObject(obj)) {
     const n = {};
 
     Object.keys(obj).forEach((k) => {
-      n[toCamel(k)] = keysToCamel(obj[k]);
+      //if key is 'date' and value is a date object, convert it to a string
+      if (obj[k] instanceof Date) {
+        n[k] = obj[k].toLocaleDateString();
+      } else {
+        n[toCamel(k)] = keysToCamel(obj[k]);
+      }
     });
 
     return n;
